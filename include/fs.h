@@ -65,4 +65,10 @@ int do_ls(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[],
 int do_save(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[],
 		int fstype);
 
+/*
+ * Determine the type of the specified filesystem and print it. Optionally it is
+ * possible to store the type directly in env.
+ */
+int do_fs_type(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[]);
+
 #endif /* _FS_H */
