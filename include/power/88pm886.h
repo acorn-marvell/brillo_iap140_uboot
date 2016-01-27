@@ -1,0 +1,84 @@
+/*
+ *  Copyright (C) 2014 Marvell International Ltd.
+ *  Fenghang Yin <yinfh@marvell.com>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
+ */
+
+#ifndef __88pm886_H_
+#define __88pm886_H_
+
+#include <power/marvell88pm_pmic.h>
+
+/* 88pm886 registers */
+enum {
+	/* base page */
+	PM886_REG_STATUS = 0x1,
+	PM886_REG_INT1 = 0x5,
+	PM886_REG_INT2 = 0x6,
+	PM886_REG_INT3 = 0x7,
+	PM886_REG_INT4 = 0x8,
+	PM886_REG_INT1MSK = 0x0a,
+	PM886_REG_INT2MSK = 0x0b,
+	PM886_REG_INT3MSK = 0x0c,
+	PM886_REG_INT4MSK = 0x0d,
+	PM886_REG_WAKE_UP = 0x14,
+	PM886_REG_LOWPOWER4 = 0x23,
+
+	/* power page */
+	PM886_BUCK_EN1 = 0x08,
+	PM886_LDO1_8_EN1 = 0x09,
+	PM886_LDO9_16_EN1 = 0x0a,
+	PM886_ID_BUCK1 = 0xa5,
+	PM886_ID_BUCK2 = 0xb3,
+	PM886_ID_BUCK3 = 0xc1,
+	PM886_ID_BUCK4 = 0xcf,
+	PM886_ID_BUCK5 = 0xdd,
+
+	/* gpadc page */
+	PM886_GPADC_CONFIG1 = 0x1,
+	PM886_GPADC_CONFIG2 = 0x2,
+	PM886_GPADC_CONFIG3 = 0x3,
+	PM886_GPADC_CONFIG6 = 0x6,
+	PM886_GPADC_CONFIG8 = 0x08,
+	PM886_VBAT_AVG1 = 0xa0,
+	PM886_VBAT_AVG2 = 0xa1,
+
+	/* battery page */
+	PM886_CHG_ID = 0x0,
+	PM886_CHG_CC_CONFIG1 = 0x1,
+	PM886_CHG_CONFIG1 = 0x28,
+	PM886_CHG_CONFIG2 = 0x29,
+	PM886_CHG_CONFIG3 = 0x2a,
+	PM886_CHG_CONFIG4 = 0x2b,
+	PM886_CHG_PRE_CONFIG1 = 0x2d,
+	PM886_CHG_FAST_CONFIG1 = 0x2e,
+	PM886_CHG_FAST_CONFIG2 = 0x2f,
+	PM886_CHG_FAST_CONFIG3 = 0x30,
+	PM886_CHG_TIMER_CONFIG = 0x31,
+	PM886_CHG_EXT_ILIM_CONFIG = 0x34,
+	PM886_CHG_MPPT_CONFIG1 = 0x3e,
+	PM886_CHG_MPPT_CONFIG2 = 0x3f,
+	PM886_CHG_LOG1 = 0x45,
+	PM886_OTG_LOG1 = 0x47,
+};
+
+#define PM886_SW_PDOWN		(1 << 5)
+#define PM886_CHG_WDG_EN	(1 << 1)
+#define PM886_CHG_PRESENT	(1 << 2)
+#define PM886_BAT_PRESENT	(1 << 3)
+#define PM886_CHG_ENABLE	(1 << 0)
+#define PM886_ICHG_FAST_MASK	(0x1f)
+#define PM886_CHG_INT_EN	(1 << 2)
+#define PM886_BAT_INT_EN	(1 << 3)
+#define PM886_ITEMP_INT_EN	(1 << 3)
+#define PM886_CHG_FAIL_INT_EN	(1 << 0)
+#define PM886_CHG_DONE_INT_EN	(1 << 1)
+#define PM886_BD_GP_SEL_3	(1 << 6)
+#define PM886_BD_EN		(1 << 5)
+#define PM886_BD_PREBIAS	(1 << 4)
+#define PM886_FASTCHG_TIMEOUT	(0x7)
+#define PM886_BATTEMP_MON2_DIS	(1 << 5)
+#define PM886_OV_VBAT_EN	(1 << 0)
+
+#endif /* __88pm886_H_ */

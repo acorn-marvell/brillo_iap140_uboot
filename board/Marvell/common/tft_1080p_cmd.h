@@ -1,0 +1,2096 @@
+/*
+ * (C) Copyright 2011
+ * Marvell Semiconductor <www.marvell.com>
+ *
+ * See file CREDITS for list of people who contributed to this
+ * project.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301 USA
+ */
+
+
+#ifndef __TFT_1080_P_CMD_H__
+#define __TFT_1080_P_CMD_H__
+
+#include "panel.h"
+
+#ifndef UNLOCK_DELAY
+#define UNLOCK_DELAY 0
+#endif
+
+
+static u8 TFT_LCD_ARRAY_CMD1[] = { 0xFF, 0xEE };
+static u8 TFT_LCD_ARRAY_CMD2[] = { 0xFB, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD4[] = { 0x24, 0x4F };
+static u8 TFT_LCD_ARRAY_CMD5[] = { 0x38, 0xC8 };
+static u8 TFT_LCD_ARRAY_CMD6[] = { 0x39, 0x27 };
+static u8 TFT_LCD_ARRAY_CMD7[] = { 0x1E, 0x77 };
+static u8 TFT_LCD_ARRAY_CMD8[] = { 0x1D, 0x0F };
+static u8 TFT_LCD_ARRAY_CMD9[] = { 0x7E, 0x71 };
+static u8 TFT_LCD_ARRAY_CMD10[] = { 0xFF, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD11[] = { 0xFB, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD16[] = { 0x00, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD17[] = { 0x01, 0x55 };
+static u8 TFT_LCD_ARRAY_CMD18[] = { 0x02, 0x40 };
+static u8 TFT_LCD_ARRAY_CMD19[] = { 0x05, 0x50 };
+static u8 TFT_LCD_ARRAY_CMD20[] = { 0x06, 0x4A };
+static u8 TFT_LCD_ARRAY_CMD21[] = { 0x07, 0x24 };
+static u8 TFT_LCD_ARRAY_CMD22[] = { 0x08, 0x0C };
+static u8 TFT_LCD_ARRAY_CMD23[] = { 0x0B, 0x87 };
+static u8 TFT_LCD_ARRAY_CMD24[] = { 0x0C, 0x87 };
+static u8 TFT_LCD_ARRAY_CMD25[] = { 0x0E, 0xB0 };
+static u8 TFT_LCD_ARRAY_CMD26[] = { 0x0F, 0xB3 };
+static u8 TFT_LCD_ARRAY_CMD27[] = { 0x11, 0x10 };
+static u8 TFT_LCD_ARRAY_CMD28[] = { 0x12, 0x10 };
+static u8 TFT_LCD_ARRAY_CMD29[] = { 0x13, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD30[] = { 0x14, 0x4A };
+static u8 TFT_LCD_ARRAY_CMD31[] = { 0x15, 0x12 };
+static u8 TFT_LCD_ARRAY_CMD32[] = { 0x16, 0x12 };
+static u8 TFT_LCD_ARRAY_CMD33[] = { 0x18, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD34[] = { 0x19, 0x77 };
+static u8 TFT_LCD_ARRAY_CMD35[] = { 0x1A, 0x55 };
+static u8 TFT_LCD_ARRAY_CMD36[] = { 0x1B, 0x13 };
+static u8 TFT_LCD_ARRAY_CMD37[] = { 0x1C, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD38[] = { 0x1D, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD39[] = { 0x1E, 0x13 };
+static u8 TFT_LCD_ARRAY_CMD40[] = { 0x1F, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD41[] = { 0x23, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD42[] = { 0x24, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD43[] = { 0x25, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD44[] = { 0x26, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD45[] = { 0x27, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD46[] = { 0x28, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD47[] = { 0x35, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD48[] = { 0x66, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD49[] = { 0x58, 0x82 };
+static u8 TFT_LCD_ARRAY_CMD50[] = { 0x59, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD51[] = { 0x5A, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD52[] = { 0x5B, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD53[] = { 0x5C, 0x82 };
+static u8 TFT_LCD_ARRAY_CMD54[] = { 0x5D, 0x82 };
+static u8 TFT_LCD_ARRAY_CMD55[] = { 0x5E, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD56[] = { 0x5F, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD57[] = { 0x72, 0x31 };
+static u8 TFT_LCD_ARRAY_CMD58[] = { 0xFF, 0x05 };
+static u8 TFT_LCD_ARRAY_CMD59[] = { 0xFB, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD60[] = { 0x00, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD61[] = { 0x01, 0x0B };
+static u8 TFT_LCD_ARRAY_CMD62[] = { 0x02, 0x0C };
+static u8 TFT_LCD_ARRAY_CMD63[] = { 0x03, 0x09 };
+static u8 TFT_LCD_ARRAY_CMD64[] = { 0x04, 0x0A };
+static u8 TFT_LCD_ARRAY_CMD65[] = { 0x05, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD66[] = { 0x06, 0x0F };
+static u8 TFT_LCD_ARRAY_CMD67[] = { 0x07, 0x10 };
+static u8 TFT_LCD_ARRAY_CMD68[] = { 0x08, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD69[] = { 0x09, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD70[] = { 0x0A, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD71[] = { 0x0B, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD72[] = { 0x0C, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD73[] = { 0x0D, 0x13 };
+static u8 TFT_LCD_ARRAY_CMD74[] = { 0x0E, 0x15 };
+static u8 TFT_LCD_ARRAY_CMD75[] = { 0x0F, 0x17 };
+static u8 TFT_LCD_ARRAY_CMD76[] = { 0x10, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD77[] = { 0x11, 0x0B };
+static u8 TFT_LCD_ARRAY_CMD78[] = { 0x12, 0x0C };
+static u8 TFT_LCD_ARRAY_CMD79[] = { 0x13, 0x09 };
+static u8 TFT_LCD_ARRAY_CMD80[] = { 0x14, 0x0A };
+static u8 TFT_LCD_ARRAY_CMD81[] = { 0x15, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD82[] = { 0x16, 0x0F };
+static u8 TFT_LCD_ARRAY_CMD83[] = { 0x17, 0x10 };
+static u8 TFT_LCD_ARRAY_CMD84[] = { 0x18, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD85[] = { 0x19, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD86[] = { 0x1A, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD87[] = { 0x1B, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD88[] = { 0x1C, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD89[] = { 0x1D, 0x13 };
+static u8 TFT_LCD_ARRAY_CMD90[] = { 0x1E, 0x15 };
+static u8 TFT_LCD_ARRAY_CMD91[] = { 0x1F, 0x17 };
+static u8 TFT_LCD_ARRAY_CMD92[] = { 0x20, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD93[] = { 0x21, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD94[] = { 0x22, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD95[] = { 0x23, 0x40 };
+static u8 TFT_LCD_ARRAY_CMD96[] = { 0x24, 0x40 };
+static u8 TFT_LCD_ARRAY_CMD97[] = { 0x25, 0xED };
+static u8 TFT_LCD_ARRAY_CMD98[] = { 0x29, 0x58 };
+static u8 TFT_LCD_ARRAY_CMD99[] = { 0x2A, 0x12 };
+static u8 TFT_LCD_ARRAY_CMD100[] = { 0x2B, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD101[] = { 0x4B, 0x06 };
+static u8 TFT_LCD_ARRAY_CMD102[] = { 0x4C, 0x11 };
+static u8 TFT_LCD_ARRAY_CMD103[] = { 0x4D, 0x20 };
+static u8 TFT_LCD_ARRAY_CMD104[] = { 0x4E, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD105[] = { 0x4F, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD106[] = { 0x50, 0x20 };
+static u8 TFT_LCD_ARRAY_CMD107[] = { 0x51, 0x61 };
+static u8 TFT_LCD_ARRAY_CMD108[] = { 0x52, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD109[] = { 0x53, 0x63 };
+static u8 TFT_LCD_ARRAY_CMD110[] = { 0x54, 0x77 };
+static u8 TFT_LCD_ARRAY_CMD111[] = { 0x55, 0xED };
+static u8 TFT_LCD_ARRAY_CMD112[] = { 0x5B, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD113[] = { 0x5C, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD114[] = { 0x5D, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD115[] = { 0x5E, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD116[] = { 0x5F, 0x15 };
+static u8 TFT_LCD_ARRAY_CMD117[] = { 0x60, 0x75 };
+static u8 TFT_LCD_ARRAY_CMD118[] = { 0x61, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD119[] = { 0x62, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD120[] = { 0x63, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD121[] = { 0x64, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD122[] = { 0x65, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD123[] = { 0x66, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD124[] = { 0x67, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD125[] = { 0x68, 0x04 };
+static u8 TFT_LCD_ARRAY_CMD126[] = { 0x69, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD127[] = { 0x6A, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD128[] = { 0x6C, 0x40 };
+static u8 TFT_LCD_ARRAY_CMD129[] = { 0x75, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD130[] = { 0x76, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD131[] = { 0x7A, 0x80 };
+static u8 TFT_LCD_ARRAY_CMD132[] = { 0x7B, 0xA3 };
+static u8 TFT_LCD_ARRAY_CMD133[] = { 0x7C, 0xD8 };
+static u8 TFT_LCD_ARRAY_CMD134[] = { 0x7D, 0x60 };
+static u8 TFT_LCD_ARRAY_CMD135[] = { 0x7F, 0x15 };
+static u8 TFT_LCD_ARRAY_CMD136[] = { 0x80, 0x81 };
+static u8 TFT_LCD_ARRAY_CMD137[] = { 0x83, 0x05 };
+static u8 TFT_LCD_ARRAY_CMD138[] = { 0x93, 0x08 };
+static u8 TFT_LCD_ARRAY_CMD139[] = { 0x94, 0x10 };
+static u8 TFT_LCD_ARRAY_CMD140[] = { 0x8A, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD141[] = { 0x9B, 0x0F };
+static u8 TFT_LCD_ARRAY_CMD144[] = { 0xFF, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD145[] = { 0xFB, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD146[] = { 0x75, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD147[] = { 0x76, 0x18 };
+static u8 TFT_LCD_ARRAY_CMD148[] = { 0x77, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD149[] = { 0x78, 0x38 };
+static u8 TFT_LCD_ARRAY_CMD150[] = { 0x79, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD151[] = { 0x7A, 0x65 };
+static u8 TFT_LCD_ARRAY_CMD152[] = { 0x7B, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD153[] = { 0x7C, 0x84 };
+static u8 TFT_LCD_ARRAY_CMD154[] = { 0x7D, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD155[] = { 0x7E, 0x98 };
+static u8 TFT_LCD_ARRAY_CMD156[] = { 0x7F, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD157[] = { 0x80, 0xAF };
+static u8 TFT_LCD_ARRAY_CMD158[] = { 0x81, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD159[] = { 0x82, 0xC1 };
+static u8 TFT_LCD_ARRAY_CMD160[] = { 0x83, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD161[] = { 0x84, 0xD2 };
+static u8 TFT_LCD_ARRAY_CMD162[] = { 0x85, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD163[] = { 0x86, 0xDF };
+static u8 TFT_LCD_ARRAY_CMD164[] = { 0x87, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD165[] = { 0x88, 0x11 };
+static u8 TFT_LCD_ARRAY_CMD166[] = { 0x89, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD167[] = { 0x8A, 0x38 };
+static u8 TFT_LCD_ARRAY_CMD168[] = { 0x8B, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD169[] = { 0x8C, 0x76 };
+static u8 TFT_LCD_ARRAY_CMD170[] = { 0x8D, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD171[] = { 0x8E, 0xA7 };
+static u8 TFT_LCD_ARRAY_CMD172[] = { 0x8F, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD173[] = { 0x90, 0xF3 };
+static u8 TFT_LCD_ARRAY_CMD174[] = { 0x91, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD175[] = { 0x92, 0x2F };
+static u8 TFT_LCD_ARRAY_CMD176[] = { 0x93, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD177[] = { 0x94, 0x30 };
+static u8 TFT_LCD_ARRAY_CMD178[] = { 0x95, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD179[] = { 0x96, 0x66 };
+static u8 TFT_LCD_ARRAY_CMD180[] = { 0x97, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD181[] = { 0x98, 0xA0 };
+static u8 TFT_LCD_ARRAY_CMD182[] = { 0x99, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD183[] = { 0x9A, 0xC5 };
+static u8 TFT_LCD_ARRAY_CMD184[] = { 0x9B, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD185[] = { 0x9C, 0xF8 };
+static u8 TFT_LCD_ARRAY_CMD186[] = { 0x9D, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD187[] = { 0x9E, 0x1B };
+static u8 TFT_LCD_ARRAY_CMD188[] = { 0x9F, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD189[] = { 0xA0, 0x46 };
+static u8 TFT_LCD_ARRAY_CMD190[] = { 0xA2, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD191[] = { 0xA3, 0x52 };
+static u8 TFT_LCD_ARRAY_CMD192[] = { 0xA4, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD193[] = { 0xA5, 0x62 };
+static u8 TFT_LCD_ARRAY_CMD194[] = { 0xA6, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD195[] = { 0xA7, 0x71 };
+static u8 TFT_LCD_ARRAY_CMD196[] = { 0xA9, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD197[] = { 0xAA, 0x83 };
+static u8 TFT_LCD_ARRAY_CMD198[] = { 0xAB, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD199[] = { 0xAC, 0x94 };
+static u8 TFT_LCD_ARRAY_CMD200[] = { 0xAD, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD201[] = { 0xAE, 0xA3 };
+static u8 TFT_LCD_ARRAY_CMD202[] = { 0xAF, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD203[] = { 0xB0, 0xAD };
+static u8 TFT_LCD_ARRAY_CMD204[] = { 0xB1, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD205[] = { 0xB2, 0xCC };
+static u8 TFT_LCD_ARRAY_CMD206[] = { 0xB3, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD207[] = { 0xB4, 0x18 };
+static u8 TFT_LCD_ARRAY_CMD208[] = { 0xB5, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD209[] = { 0xB6, 0x38 };
+static u8 TFT_LCD_ARRAY_CMD210[] = { 0xB7, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD211[] = { 0xB8, 0x65 };
+static u8 TFT_LCD_ARRAY_CMD212[] = { 0xB9, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD213[] = { 0xBA, 0x84 };
+static u8 TFT_LCD_ARRAY_CMD214[] = { 0xBB, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD215[] = { 0xBC, 0x9B };
+static u8 TFT_LCD_ARRAY_CMD216[] = { 0xBD, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD217[] = { 0xBE, 0xAF };
+static u8 TFT_LCD_ARRAY_CMD218[] = { 0xBF, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD219[] = { 0xC0, 0xC1 };
+static u8 TFT_LCD_ARRAY_CMD220[] = { 0xC1, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD221[] = { 0xC2, 0xD2 };
+static u8 TFT_LCD_ARRAY_CMD222[] = { 0xC3, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD223[] = { 0xC4, 0xDF };
+static u8 TFT_LCD_ARRAY_CMD224[] = { 0xC5, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD225[] = { 0xC6, 0x11 };
+static u8 TFT_LCD_ARRAY_CMD226[] = { 0xC7, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD227[] = { 0xC8, 0x5D };
+static u8 TFT_LCD_ARRAY_CMD228[] = { 0xC9, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD229[] = { 0xCA, 0x76 };
+static u8 TFT_LCD_ARRAY_CMD230[] = { 0xCB, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD231[] = { 0xCC, 0xA7 };
+static u8 TFT_LCD_ARRAY_CMD232[] = { 0xCD, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD233[] = { 0xCE, 0xF3 };
+static u8 TFT_LCD_ARRAY_CMD234[] = { 0xCF, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD235[] = { 0xD0, 0x2F };
+static u8 TFT_LCD_ARRAY_CMD236[] = { 0xD1, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD237[] = { 0xD2, 0x30 };
+static u8 TFT_LCD_ARRAY_CMD238[] = { 0xD3, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD239[] = { 0xD4, 0x66 };
+static u8 TFT_LCD_ARRAY_CMD240[] = { 0xD5, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD241[] = { 0xD6, 0xA0 };
+static u8 TFT_LCD_ARRAY_CMD242[] = { 0xD7, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD243[] = { 0xD8, 0xC5 };
+static u8 TFT_LCD_ARRAY_CMD244[] = { 0xD9, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD245[] = { 0xDA, 0xF8 };
+static u8 TFT_LCD_ARRAY_CMD246[] = { 0xDB, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD247[] = { 0xDC, 0x1B };
+static u8 TFT_LCD_ARRAY_CMD248[] = { 0xDD, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD249[] = { 0xDE, 0x46 };
+static u8 TFT_LCD_ARRAY_CMD250[] = { 0xDF, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD251[] = { 0xE0, 0x52 };
+static u8 TFT_LCD_ARRAY_CMD252[] = { 0xE1, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD253[] = { 0xE2, 0x62 };
+static u8 TFT_LCD_ARRAY_CMD254[] = { 0xE3, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD255[] = { 0xE4, 0x71 };
+static u8 TFT_LCD_ARRAY_CMD256[] = { 0xE5, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD257[] = { 0xE6, 0x83 };
+static u8 TFT_LCD_ARRAY_CMD258[] = { 0xE7, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD259[] = { 0xE8, 0x94 };
+static u8 TFT_LCD_ARRAY_CMD260[] = { 0xE9, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD261[] = { 0xEA, 0xA3 };
+static u8 TFT_LCD_ARRAY_CMD262[] = { 0xEB, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD263[] = { 0xEC, 0xAD };
+static u8 TFT_LCD_ARRAY_CMD264[] = { 0xED, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD265[] = { 0xEE, 0xCC };
+static u8 TFT_LCD_ARRAY_CMD266[] = { 0xEF, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD267[] = { 0xF0, 0x18 };
+static u8 TFT_LCD_ARRAY_CMD268[] = { 0xF1, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD269[] = { 0xF2, 0x38 };
+static u8 TFT_LCD_ARRAY_CMD270[] = { 0xF3, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD271[] = { 0xF4, 0x65 };
+static u8 TFT_LCD_ARRAY_CMD272[] = { 0xF5, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD273[] = { 0xF6, 0x84 };
+static u8 TFT_LCD_ARRAY_CMD274[] = { 0xF7, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD275[] = { 0xF8, 0x9B };
+static u8 TFT_LCD_ARRAY_CMD276[] = { 0xF9, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD277[] = { 0xFA, 0xAF };
+static u8 TFT_LCD_ARRAY_CMD278[] = { 0xFF, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD279[] = { 0xFB, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD280[] = { 0x00, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD281[] = { 0x01, 0xC1 };
+static u8 TFT_LCD_ARRAY_CMD282[] = { 0x02, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD283[] = { 0x03, 0xD2 };
+static u8 TFT_LCD_ARRAY_CMD284[] = { 0x04, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD285[] = { 0x05, 0xDF };
+static u8 TFT_LCD_ARRAY_CMD286[] = { 0x06, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD287[] = { 0x07, 0x11 };
+static u8 TFT_LCD_ARRAY_CMD288[] = { 0x08, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD289[] = { 0x09, 0x38 };
+static u8 TFT_LCD_ARRAY_CMD290[] = { 0x0A, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD291[] = { 0x0B, 0x76 };
+static u8 TFT_LCD_ARRAY_CMD292[] = { 0x0C, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD293[] = { 0x0D, 0xA7 };
+static u8 TFT_LCD_ARRAY_CMD294[] = { 0x0E, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD295[] = { 0x0F, 0xF3 };
+static u8 TFT_LCD_ARRAY_CMD296[] = { 0x10, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD297[] = { 0x11, 0x2F };
+static u8 TFT_LCD_ARRAY_CMD298[] = { 0x12, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD299[] = { 0x13, 0x30 };
+static u8 TFT_LCD_ARRAY_CMD300[] = { 0x14, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD301[] = { 0x15, 0x66 };
+static u8 TFT_LCD_ARRAY_CMD302[] = { 0x16, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD303[] = { 0x17, 0xA0 };
+static u8 TFT_LCD_ARRAY_CMD304[] = { 0x18, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD305[] = { 0x19, 0xC5 };
+static u8 TFT_LCD_ARRAY_CMD306[] = { 0x1A, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD307[] = { 0x1B, 0xF8 };
+static u8 TFT_LCD_ARRAY_CMD308[] = { 0x1C, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD309[] = { 0x1D, 0x1B };
+static u8 TFT_LCD_ARRAY_CMD310[] = { 0x1E, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD311[] = { 0x1F, 0x46 };
+static u8 TFT_LCD_ARRAY_CMD312[] = { 0x20, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD313[] = { 0x21, 0x52 };
+static u8 TFT_LCD_ARRAY_CMD314[] = { 0x22, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD315[] = { 0x23, 0x62 };
+static u8 TFT_LCD_ARRAY_CMD316[] = { 0x24, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD317[] = { 0x25, 0x71 };
+static u8 TFT_LCD_ARRAY_CMD318[] = { 0x26, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD319[] = { 0x27, 0x83 };
+static u8 TFT_LCD_ARRAY_CMD320[] = { 0x28, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD321[] = { 0x29, 0x94 };
+static u8 TFT_LCD_ARRAY_CMD322[] = { 0x2A, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD323[] = { 0x2B, 0xA3 };
+static u8 TFT_LCD_ARRAY_CMD324[] = { 0x2D, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD325[] = { 0x2F, 0xAD };
+static u8 TFT_LCD_ARRAY_CMD326[] = { 0x30, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD327[] = { 0x31, 0xCC };
+static u8 TFT_LCD_ARRAY_CMD328[] = { 0x32, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD329[] = { 0x33, 0x18 };
+static u8 TFT_LCD_ARRAY_CMD330[] = { 0x34, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD331[] = { 0x35, 0x38 };
+static u8 TFT_LCD_ARRAY_CMD332[] = { 0x36, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD333[] = { 0x37, 0x65 };
+static u8 TFT_LCD_ARRAY_CMD334[] = { 0x38, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD335[] = { 0x39, 0x84 };
+static u8 TFT_LCD_ARRAY_CMD336[] = { 0x3A, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD337[] = { 0x3B, 0x9B };
+static u8 TFT_LCD_ARRAY_CMD338[] = { 0x3D, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD339[] = { 0x3F, 0xAF };
+static u8 TFT_LCD_ARRAY_CMD340[] = { 0x40, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD341[] = { 0x41, 0xC1 };
+static u8 TFT_LCD_ARRAY_CMD342[] = { 0x42, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD343[] = { 0x43, 0xD2 };
+static u8 TFT_LCD_ARRAY_CMD344[] = { 0x44, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD345[] = { 0x45, 0xDF };
+static u8 TFT_LCD_ARRAY_CMD346[] = { 0x46, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD347[] = { 0x47, 0x11 };
+static u8 TFT_LCD_ARRAY_CMD348[] = { 0x48, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD349[] = { 0x49, 0x38 };
+static u8 TFT_LCD_ARRAY_CMD350[] = { 0x4A, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD351[] = { 0x4B, 0x76 };
+static u8 TFT_LCD_ARRAY_CMD352[] = { 0x4C, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD353[] = { 0x4D, 0xA7 };
+static u8 TFT_LCD_ARRAY_CMD354[] = { 0x4E, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD355[] = { 0x4F, 0xF3 };
+static u8 TFT_LCD_ARRAY_CMD356[] = { 0x50, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD357[] = { 0x51, 0x2F };
+static u8 TFT_LCD_ARRAY_CMD358[] = { 0x52, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD359[] = { 0x53, 0x30 };
+static u8 TFT_LCD_ARRAY_CMD360[] = { 0x54, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD361[] = { 0x55, 0x66 };
+static u8 TFT_LCD_ARRAY_CMD362[] = { 0x56, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD363[] = { 0x58, 0xA0 };
+static u8 TFT_LCD_ARRAY_CMD364[] = { 0x59, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD365[] = { 0x5A, 0xC5 };
+static u8 TFT_LCD_ARRAY_CMD366[] = { 0x5B, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD367[] = { 0x5C, 0xF8 };
+static u8 TFT_LCD_ARRAY_CMD368[] = { 0x5D, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD369[] = { 0x5E, 0x1B };
+static u8 TFT_LCD_ARRAY_CMD370[] = { 0x5F, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD371[] = { 0x60, 0x46 };
+static u8 TFT_LCD_ARRAY_CMD372[] = { 0x61, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD373[] = { 0x62, 0x52 };
+static u8 TFT_LCD_ARRAY_CMD374[] = { 0x63, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD375[] = { 0x64, 0x62 };
+static u8 TFT_LCD_ARRAY_CMD376[] = { 0x65, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD377[] = { 0x66, 0x71 };
+static u8 TFT_LCD_ARRAY_CMD378[] = { 0x67, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD379[] = { 0x68, 0x83 };
+static u8 TFT_LCD_ARRAY_CMD380[] = { 0x69, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD381[] = { 0x6A, 0x94 };
+static u8 TFT_LCD_ARRAY_CMD382[] = { 0x6B, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD383[] = { 0x6C, 0xA3 };
+static u8 TFT_LCD_ARRAY_CMD384[] = { 0x6D, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD385[] = { 0x6E, 0xAD };
+static u8 TFT_LCD_ARRAY_CMD386[] = { 0x6F, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD387[] = { 0x70, 0xCC };
+static u8 TFT_LCD_ARRAY_CMD388[] = { 0x71, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD389[] = { 0x72, 0x18 };
+static u8 TFT_LCD_ARRAY_CMD390[] = { 0x73, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD391[] = { 0x74, 0x38 };
+static u8 TFT_LCD_ARRAY_CMD392[] = { 0x75, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD393[] = { 0x76, 0x65 };
+static u8 TFT_LCD_ARRAY_CMD394[] = { 0x77, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD395[] = { 0x78, 0x84 };
+static u8 TFT_LCD_ARRAY_CMD396[] = { 0x79, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD397[] = { 0x7A, 0x9B };
+static u8 TFT_LCD_ARRAY_CMD398[] = { 0x7B, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD399[] = { 0x7C, 0xAF };
+static u8 TFT_LCD_ARRAY_CMD400[] = { 0x7D, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD401[] = { 0x7E, 0xC1 };
+static u8 TFT_LCD_ARRAY_CMD402[] = { 0x7F, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD403[] = { 0x80, 0xD2 };
+static u8 TFT_LCD_ARRAY_CMD404[] = { 0x81, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD405[] = { 0x82, 0xDF };
+static u8 TFT_LCD_ARRAY_CMD406[] = { 0x83, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD407[] = { 0x84, 0x11 };
+static u8 TFT_LCD_ARRAY_CMD408[] = { 0x85, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD409[] = { 0x86, 0x38 };
+static u8 TFT_LCD_ARRAY_CMD410[] = { 0x87, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD411[] = { 0x88, 0x76 };
+static u8 TFT_LCD_ARRAY_CMD412[] = { 0x89, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD413[] = { 0x8A, 0xA7 };
+static u8 TFT_LCD_ARRAY_CMD414[] = { 0x8B, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD415[] = { 0x8C, 0xF3 };
+static u8 TFT_LCD_ARRAY_CMD416[] = { 0x8D, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD417[] = { 0x8E, 0x2F };
+static u8 TFT_LCD_ARRAY_CMD418[] = { 0x8F, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD419[] = { 0x90, 0x30 };
+static u8 TFT_LCD_ARRAY_CMD420[] = { 0x91, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD421[] = { 0x92, 0x66 };
+static u8 TFT_LCD_ARRAY_CMD422[] = { 0x93, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD423[] = { 0x94, 0xA0 };
+static u8 TFT_LCD_ARRAY_CMD424[] = { 0x95, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD425[] = { 0x96, 0xC5 };
+static u8 TFT_LCD_ARRAY_CMD426[] = { 0x97, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD427[] = { 0x98, 0xF8 };
+static u8 TFT_LCD_ARRAY_CMD428[] = { 0x99, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD429[] = { 0x9A, 0x1B };
+static u8 TFT_LCD_ARRAY_CMD430[] = { 0x9B, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD431[] = { 0x9C, 0x46 };
+static u8 TFT_LCD_ARRAY_CMD432[] = { 0x9D, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD433[] = { 0x9E, 0x52 };
+static u8 TFT_LCD_ARRAY_CMD434[] = { 0x9F, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD435[] = { 0xA0, 0x62 };
+static u8 TFT_LCD_ARRAY_CMD436[] = { 0xA2, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD437[] = { 0xA3, 0x71 };
+static u8 TFT_LCD_ARRAY_CMD438[] = { 0xA4, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD439[] = { 0xA5, 0x83 };
+static u8 TFT_LCD_ARRAY_CMD440[] = { 0xA6, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD441[] = { 0xA7, 0x94 };
+static u8 TFT_LCD_ARRAY_CMD442[] = { 0xA9, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD443[] = { 0xAA, 0xA3 };
+static u8 TFT_LCD_ARRAY_CMD444[] = { 0xAB, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD445[] = { 0xAC, 0xAD };
+static u8 TFT_LCD_ARRAY_CMD446[] = { 0xAD, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD447[] = { 0xAE, 0xCC };
+static u8 TFT_LCD_ARRAY_CMD448[] = { 0xAF, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD449[] = { 0xB0, 0x18 };
+static u8 TFT_LCD_ARRAY_CMD450[] = { 0xB1, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD451[] = { 0xB2, 0x38 };
+static u8 TFT_LCD_ARRAY_CMD452[] = { 0xB3, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD453[] = { 0xB4, 0x65 };
+static u8 TFT_LCD_ARRAY_CMD454[] = { 0xB5, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD455[] = { 0xB6, 0x84 };
+static u8 TFT_LCD_ARRAY_CMD456[] = { 0xB7, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD457[] = { 0xB8, 0x9B };
+static u8 TFT_LCD_ARRAY_CMD458[] = { 0xB9, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD459[] = { 0xBA, 0xAF };
+static u8 TFT_LCD_ARRAY_CMD460[] = { 0xBB, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD461[] = { 0xBC, 0xC1 };
+static u8 TFT_LCD_ARRAY_CMD462[] = { 0xBD, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD463[] = { 0xBE, 0xD2 };
+static u8 TFT_LCD_ARRAY_CMD464[] = { 0xBF, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD465[] = { 0xC0, 0xDF };
+static u8 TFT_LCD_ARRAY_CMD466[] = { 0xC1, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD467[] = { 0xC2, 0x11 };
+static u8 TFT_LCD_ARRAY_CMD468[] = { 0xC3, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD469[] = { 0xC4, 0x38 };
+static u8 TFT_LCD_ARRAY_CMD470[] = { 0xC5, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD471[] = { 0xC6, 0x76 };
+static u8 TFT_LCD_ARRAY_CMD472[] = { 0xC7, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD473[] = { 0xC8, 0xA7 };
+static u8 TFT_LCD_ARRAY_CMD474[] = { 0xC9, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD475[] = { 0xCA, 0xF3 };
+static u8 TFT_LCD_ARRAY_CMD476[] = { 0xCB, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD477[] = { 0xCC, 0x2F };
+static u8 TFT_LCD_ARRAY_CMD478[] = { 0xCD, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD479[] = { 0xCE, 0x30 };
+static u8 TFT_LCD_ARRAY_CMD480[] = { 0xCF, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD481[] = { 0xD0, 0x66 };
+static u8 TFT_LCD_ARRAY_CMD482[] = { 0xD1, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD483[] = { 0xD2, 0xA0 };
+static u8 TFT_LCD_ARRAY_CMD484[] = { 0xD3, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD485[] = { 0xD4, 0xC5 };
+static u8 TFT_LCD_ARRAY_CMD486[] = { 0xD5, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD487[] = { 0xD6, 0xF8 };
+static u8 TFT_LCD_ARRAY_CMD488[] = { 0xD7, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD489[] = { 0xD8, 0x1B };
+static u8 TFT_LCD_ARRAY_CMD490[] = { 0xD9, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD491[] = { 0xDA, 0x46 };
+static u8 TFT_LCD_ARRAY_CMD492[] = { 0xDB, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD493[] = { 0xDC, 0x52 };
+static u8 TFT_LCD_ARRAY_CMD494[] = { 0xDD, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD495[] = { 0xDE, 0x62 };
+static u8 TFT_LCD_ARRAY_CMD496[] = { 0xDF, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD497[] = { 0xE0, 0x71 };
+static u8 TFT_LCD_ARRAY_CMD498[] = { 0xE1, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD499[] = { 0xE2, 0x83 };
+static u8 TFT_LCD_ARRAY_CMD500[] = { 0xE3, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD501[] = { 0xE4, 0x94 };
+static u8 TFT_LCD_ARRAY_CMD502[] = { 0xE5, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD503[] = { 0xE6, 0xA3 };
+static u8 TFT_LCD_ARRAY_CMD504[] = { 0xE7, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD505[] = { 0xE8, 0xAD };
+static u8 TFT_LCD_ARRAY_CMD506[] = { 0xE9, 0x03 };
+static u8 TFT_LCD_ARRAY_CMD507[] = { 0xEA, 0xCC };
+static u8 TFT_LCD_ARRAY_CMD508[] = { 0xFF, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD509[] = { 0xFB, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD510[] = { 0xFF, 0x02 };
+static u8 TFT_LCD_ARRAY_CMD511[] = { 0xFB, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD512[] = { 0xFF, 0x04 };
+static u8 TFT_LCD_ARRAY_CMD513[] = { 0xFB, 0x01 };
+static u8 TFT_LCD_ARRAY_CMD514[] = { 0xFF, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD515[] = { 0xD3, 0x14 };
+static u8 TFT_LCD_ARRAY_CMD516[] = { 0xD4, 0x14 };
+static u8 TFT_LCD_ARRAY_CMD517[] = { 0x11 };
+static u8 TFT_LCD_ARRAY_CMD518[] = { 0xFF, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD519[] = { 0x34, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD520[] = { 0x35, 0x00 };
+static u8 TFT_LCD_ARRAY_CMD521[] = { 0x29 };
+
+static struct dsi_cmd_desc tft1080p_video_display_on_cmds[] = {
+
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD1), TFT_LCD_ARRAY_CMD1}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD2), TFT_LCD_ARRAY_CMD2}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD4), TFT_LCD_ARRAY_CMD4}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD5), TFT_LCD_ARRAY_CMD5}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD6), TFT_LCD_ARRAY_CMD6}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD7), TFT_LCD_ARRAY_CMD7}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD8), TFT_LCD_ARRAY_CMD8}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD9), TFT_LCD_ARRAY_CMD9}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD10), TFT_LCD_ARRAY_CMD10}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD11), TFT_LCD_ARRAY_CMD11}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD16), TFT_LCD_ARRAY_CMD16}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD17), TFT_LCD_ARRAY_CMD17}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD18), TFT_LCD_ARRAY_CMD18}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD19), TFT_LCD_ARRAY_CMD19}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD20), TFT_LCD_ARRAY_CMD20}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD21), TFT_LCD_ARRAY_CMD21}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD22), TFT_LCD_ARRAY_CMD22}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD23), TFT_LCD_ARRAY_CMD23}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD24), TFT_LCD_ARRAY_CMD24}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD25), TFT_LCD_ARRAY_CMD25}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD26), TFT_LCD_ARRAY_CMD26}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD27), TFT_LCD_ARRAY_CMD27}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD28), TFT_LCD_ARRAY_CMD28}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD29), TFT_LCD_ARRAY_CMD29}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD30), TFT_LCD_ARRAY_CMD30}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD31), TFT_LCD_ARRAY_CMD31}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD32), TFT_LCD_ARRAY_CMD32}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD33), TFT_LCD_ARRAY_CMD33}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD34), TFT_LCD_ARRAY_CMD34}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD35), TFT_LCD_ARRAY_CMD35}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD36), TFT_LCD_ARRAY_CMD36}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD37), TFT_LCD_ARRAY_CMD37}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD38), TFT_LCD_ARRAY_CMD38}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD39), TFT_LCD_ARRAY_CMD39}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD40), TFT_LCD_ARRAY_CMD40}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD41), TFT_LCD_ARRAY_CMD41}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD42), TFT_LCD_ARRAY_CMD42}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD43), TFT_LCD_ARRAY_CMD43}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD44), TFT_LCD_ARRAY_CMD44}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD45), TFT_LCD_ARRAY_CMD45}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD46), TFT_LCD_ARRAY_CMD46}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD47), TFT_LCD_ARRAY_CMD47}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD48), TFT_LCD_ARRAY_CMD48}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD49), TFT_LCD_ARRAY_CMD49}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD50), TFT_LCD_ARRAY_CMD50}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD51), TFT_LCD_ARRAY_CMD51}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD52), TFT_LCD_ARRAY_CMD52}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD53), TFT_LCD_ARRAY_CMD53}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD54), TFT_LCD_ARRAY_CMD54}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD55), TFT_LCD_ARRAY_CMD55}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD56), TFT_LCD_ARRAY_CMD56}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD57), TFT_LCD_ARRAY_CMD57}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD58), TFT_LCD_ARRAY_CMD58}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD59), TFT_LCD_ARRAY_CMD59}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD60), TFT_LCD_ARRAY_CMD60}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD61), TFT_LCD_ARRAY_CMD61}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD62), TFT_LCD_ARRAY_CMD62}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD63), TFT_LCD_ARRAY_CMD63}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD64), TFT_LCD_ARRAY_CMD64}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD65), TFT_LCD_ARRAY_CMD65}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD66), TFT_LCD_ARRAY_CMD66}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD67), TFT_LCD_ARRAY_CMD67}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD68), TFT_LCD_ARRAY_CMD68}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD69), TFT_LCD_ARRAY_CMD69}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD70), TFT_LCD_ARRAY_CMD70}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD71), TFT_LCD_ARRAY_CMD71}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD72), TFT_LCD_ARRAY_CMD72}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD73), TFT_LCD_ARRAY_CMD73}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD74), TFT_LCD_ARRAY_CMD74}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD75), TFT_LCD_ARRAY_CMD75}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD76), TFT_LCD_ARRAY_CMD76}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD77), TFT_LCD_ARRAY_CMD77}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD78), TFT_LCD_ARRAY_CMD78}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD79), TFT_LCD_ARRAY_CMD79}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD80), TFT_LCD_ARRAY_CMD80}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD81), TFT_LCD_ARRAY_CMD81}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD82), TFT_LCD_ARRAY_CMD82}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD83), TFT_LCD_ARRAY_CMD83}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD84), TFT_LCD_ARRAY_CMD84}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD85), TFT_LCD_ARRAY_CMD85}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD86), TFT_LCD_ARRAY_CMD86}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD87), TFT_LCD_ARRAY_CMD87}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD88), TFT_LCD_ARRAY_CMD88}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD89), TFT_LCD_ARRAY_CMD89}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD90), TFT_LCD_ARRAY_CMD90}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD91), TFT_LCD_ARRAY_CMD91}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD92), TFT_LCD_ARRAY_CMD92}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD93), TFT_LCD_ARRAY_CMD93}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD94), TFT_LCD_ARRAY_CMD94}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD95), TFT_LCD_ARRAY_CMD95}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD96), TFT_LCD_ARRAY_CMD96}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD97), TFT_LCD_ARRAY_CMD97}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD98), TFT_LCD_ARRAY_CMD98}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD99), TFT_LCD_ARRAY_CMD99}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD100), TFT_LCD_ARRAY_CMD100}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD101), TFT_LCD_ARRAY_CMD101}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD102), TFT_LCD_ARRAY_CMD102}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD103), TFT_LCD_ARRAY_CMD103}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD104), TFT_LCD_ARRAY_CMD104}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD105), TFT_LCD_ARRAY_CMD105}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD106), TFT_LCD_ARRAY_CMD106}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD107), TFT_LCD_ARRAY_CMD107}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD108), TFT_LCD_ARRAY_CMD108}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD109), TFT_LCD_ARRAY_CMD109}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD110), TFT_LCD_ARRAY_CMD110}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD111), TFT_LCD_ARRAY_CMD111}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD112), TFT_LCD_ARRAY_CMD112}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD113), TFT_LCD_ARRAY_CMD113}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD114), TFT_LCD_ARRAY_CMD114}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD115), TFT_LCD_ARRAY_CMD115}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD116), TFT_LCD_ARRAY_CMD116}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD117), TFT_LCD_ARRAY_CMD117}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD118), TFT_LCD_ARRAY_CMD118}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD119), TFT_LCD_ARRAY_CMD119}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD120), TFT_LCD_ARRAY_CMD120}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD121), TFT_LCD_ARRAY_CMD121}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD122), TFT_LCD_ARRAY_CMD122}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD123), TFT_LCD_ARRAY_CMD123}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD124), TFT_LCD_ARRAY_CMD124}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD125), TFT_LCD_ARRAY_CMD125}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD126), TFT_LCD_ARRAY_CMD126}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD127), TFT_LCD_ARRAY_CMD127}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD128), TFT_LCD_ARRAY_CMD128}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD129), TFT_LCD_ARRAY_CMD129}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD130), TFT_LCD_ARRAY_CMD130}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD131), TFT_LCD_ARRAY_CMD131}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD132), TFT_LCD_ARRAY_CMD132}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD133), TFT_LCD_ARRAY_CMD133}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD134), TFT_LCD_ARRAY_CMD134}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD135), TFT_LCD_ARRAY_CMD135}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD136), TFT_LCD_ARRAY_CMD136}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD137), TFT_LCD_ARRAY_CMD137}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD138), TFT_LCD_ARRAY_CMD138}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD139), TFT_LCD_ARRAY_CMD139}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD140), TFT_LCD_ARRAY_CMD140}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD141), TFT_LCD_ARRAY_CMD141}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD144), TFT_LCD_ARRAY_CMD144}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD145), TFT_LCD_ARRAY_CMD145}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD146), TFT_LCD_ARRAY_CMD146}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD147), TFT_LCD_ARRAY_CMD147}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD148), TFT_LCD_ARRAY_CMD148}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD149), TFT_LCD_ARRAY_CMD149}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD150), TFT_LCD_ARRAY_CMD150}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD151), TFT_LCD_ARRAY_CMD151}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD152), TFT_LCD_ARRAY_CMD152}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD153), TFT_LCD_ARRAY_CMD153}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD154), TFT_LCD_ARRAY_CMD154}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD155), TFT_LCD_ARRAY_CMD155}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD156), TFT_LCD_ARRAY_CMD156}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD157), TFT_LCD_ARRAY_CMD157}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD158), TFT_LCD_ARRAY_CMD158}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD159), TFT_LCD_ARRAY_CMD159}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD160), TFT_LCD_ARRAY_CMD160}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD161), TFT_LCD_ARRAY_CMD161}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD162), TFT_LCD_ARRAY_CMD162}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD163), TFT_LCD_ARRAY_CMD163}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD164), TFT_LCD_ARRAY_CMD164}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD165), TFT_LCD_ARRAY_CMD165}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD166), TFT_LCD_ARRAY_CMD166}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD167), TFT_LCD_ARRAY_CMD167}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD168), TFT_LCD_ARRAY_CMD168}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD169), TFT_LCD_ARRAY_CMD169}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD170), TFT_LCD_ARRAY_CMD170}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD171), TFT_LCD_ARRAY_CMD171}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD172), TFT_LCD_ARRAY_CMD172}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD173), TFT_LCD_ARRAY_CMD173}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD174), TFT_LCD_ARRAY_CMD174}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD175), TFT_LCD_ARRAY_CMD175}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD176), TFT_LCD_ARRAY_CMD176}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD177), TFT_LCD_ARRAY_CMD177}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD178), TFT_LCD_ARRAY_CMD178}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD179), TFT_LCD_ARRAY_CMD179}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD180), TFT_LCD_ARRAY_CMD180}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD181), TFT_LCD_ARRAY_CMD181}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD182), TFT_LCD_ARRAY_CMD182}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD183), TFT_LCD_ARRAY_CMD183}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD184), TFT_LCD_ARRAY_CMD184}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD185), TFT_LCD_ARRAY_CMD185}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD186), TFT_LCD_ARRAY_CMD186}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD187), TFT_LCD_ARRAY_CMD187}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD188), TFT_LCD_ARRAY_CMD188}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD189), TFT_LCD_ARRAY_CMD189}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD190), TFT_LCD_ARRAY_CMD190}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD191), TFT_LCD_ARRAY_CMD191}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD192), TFT_LCD_ARRAY_CMD192}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD193), TFT_LCD_ARRAY_CMD193}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD194), TFT_LCD_ARRAY_CMD194}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD195), TFT_LCD_ARRAY_CMD195}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD196), TFT_LCD_ARRAY_CMD196}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD197), TFT_LCD_ARRAY_CMD197}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD198), TFT_LCD_ARRAY_CMD198}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD199), TFT_LCD_ARRAY_CMD199}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD200), TFT_LCD_ARRAY_CMD200}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD201), TFT_LCD_ARRAY_CMD201}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD202), TFT_LCD_ARRAY_CMD202}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD203), TFT_LCD_ARRAY_CMD203}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD204), TFT_LCD_ARRAY_CMD204}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD205), TFT_LCD_ARRAY_CMD205}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD206), TFT_LCD_ARRAY_CMD206}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD207), TFT_LCD_ARRAY_CMD207}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD208), TFT_LCD_ARRAY_CMD208}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD209), TFT_LCD_ARRAY_CMD209}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD210), TFT_LCD_ARRAY_CMD210}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD211), TFT_LCD_ARRAY_CMD211}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD212), TFT_LCD_ARRAY_CMD212}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD213), TFT_LCD_ARRAY_CMD213}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD214), TFT_LCD_ARRAY_CMD214}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD215), TFT_LCD_ARRAY_CMD215}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD216), TFT_LCD_ARRAY_CMD216}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD217), TFT_LCD_ARRAY_CMD217}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD218), TFT_LCD_ARRAY_CMD218}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD219), TFT_LCD_ARRAY_CMD219}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD220), TFT_LCD_ARRAY_CMD220}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD221), TFT_LCD_ARRAY_CMD221}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD222), TFT_LCD_ARRAY_CMD222}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD223), TFT_LCD_ARRAY_CMD223}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD224), TFT_LCD_ARRAY_CMD224}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD225), TFT_LCD_ARRAY_CMD225}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD226), TFT_LCD_ARRAY_CMD226}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD227), TFT_LCD_ARRAY_CMD227}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD228), TFT_LCD_ARRAY_CMD228}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD229), TFT_LCD_ARRAY_CMD229}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD230), TFT_LCD_ARRAY_CMD230}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD231), TFT_LCD_ARRAY_CMD231}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD232), TFT_LCD_ARRAY_CMD232}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD233), TFT_LCD_ARRAY_CMD233}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD234), TFT_LCD_ARRAY_CMD234}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD235), TFT_LCD_ARRAY_CMD235}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD236), TFT_LCD_ARRAY_CMD236}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD237), TFT_LCD_ARRAY_CMD237}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD238), TFT_LCD_ARRAY_CMD238}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD239), TFT_LCD_ARRAY_CMD239}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD240), TFT_LCD_ARRAY_CMD240}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD241), TFT_LCD_ARRAY_CMD241}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD242), TFT_LCD_ARRAY_CMD242}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD243), TFT_LCD_ARRAY_CMD243}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD244), TFT_LCD_ARRAY_CMD244}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD245), TFT_LCD_ARRAY_CMD245}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD246), TFT_LCD_ARRAY_CMD246}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD247), TFT_LCD_ARRAY_CMD247}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD248), TFT_LCD_ARRAY_CMD248}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD249), TFT_LCD_ARRAY_CMD249}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD250), TFT_LCD_ARRAY_CMD250}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD251), TFT_LCD_ARRAY_CMD251}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD252), TFT_LCD_ARRAY_CMD252}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD253), TFT_LCD_ARRAY_CMD253}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD254), TFT_LCD_ARRAY_CMD254}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD255), TFT_LCD_ARRAY_CMD255}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD256), TFT_LCD_ARRAY_CMD256}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD257), TFT_LCD_ARRAY_CMD257}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD258), TFT_LCD_ARRAY_CMD258}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD259), TFT_LCD_ARRAY_CMD259}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD260), TFT_LCD_ARRAY_CMD260}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD261), TFT_LCD_ARRAY_CMD261}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD262), TFT_LCD_ARRAY_CMD262}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD263), TFT_LCD_ARRAY_CMD263}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD264), TFT_LCD_ARRAY_CMD264}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD265), TFT_LCD_ARRAY_CMD265}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD266), TFT_LCD_ARRAY_CMD266}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD267), TFT_LCD_ARRAY_CMD267}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD268), TFT_LCD_ARRAY_CMD268}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD269), TFT_LCD_ARRAY_CMD269}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD270), TFT_LCD_ARRAY_CMD270}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD271), TFT_LCD_ARRAY_CMD271}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD272), TFT_LCD_ARRAY_CMD272}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD273), TFT_LCD_ARRAY_CMD273}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD274), TFT_LCD_ARRAY_CMD274}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD275), TFT_LCD_ARRAY_CMD275}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD276), TFT_LCD_ARRAY_CMD276}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD277), TFT_LCD_ARRAY_CMD277}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD278), TFT_LCD_ARRAY_CMD278}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD279), TFT_LCD_ARRAY_CMD279}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD280), TFT_LCD_ARRAY_CMD280}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD281), TFT_LCD_ARRAY_CMD281}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD282), TFT_LCD_ARRAY_CMD282}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD283), TFT_LCD_ARRAY_CMD283}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD284), TFT_LCD_ARRAY_CMD284}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD285), TFT_LCD_ARRAY_CMD285}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD286), TFT_LCD_ARRAY_CMD286}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD287), TFT_LCD_ARRAY_CMD287}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD288), TFT_LCD_ARRAY_CMD288}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD289), TFT_LCD_ARRAY_CMD289}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD290), TFT_LCD_ARRAY_CMD290}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD291), TFT_LCD_ARRAY_CMD291}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD292), TFT_LCD_ARRAY_CMD292}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD293), TFT_LCD_ARRAY_CMD293}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD294), TFT_LCD_ARRAY_CMD294}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD295), TFT_LCD_ARRAY_CMD295}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD296), TFT_LCD_ARRAY_CMD296}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD297), TFT_LCD_ARRAY_CMD297}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD298), TFT_LCD_ARRAY_CMD298}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD299), TFT_LCD_ARRAY_CMD299}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD300), TFT_LCD_ARRAY_CMD300}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD301), TFT_LCD_ARRAY_CMD301}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD302), TFT_LCD_ARRAY_CMD302}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD303), TFT_LCD_ARRAY_CMD303}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD304), TFT_LCD_ARRAY_CMD304}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD305), TFT_LCD_ARRAY_CMD305}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD306), TFT_LCD_ARRAY_CMD306}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD307), TFT_LCD_ARRAY_CMD307}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD308), TFT_LCD_ARRAY_CMD308}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD309), TFT_LCD_ARRAY_CMD309}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD310), TFT_LCD_ARRAY_CMD310}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD311), TFT_LCD_ARRAY_CMD311}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD312), TFT_LCD_ARRAY_CMD312}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD313), TFT_LCD_ARRAY_CMD313}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD314), TFT_LCD_ARRAY_CMD314}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD315), TFT_LCD_ARRAY_CMD315}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD316), TFT_LCD_ARRAY_CMD316}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD317), TFT_LCD_ARRAY_CMD317}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD318), TFT_LCD_ARRAY_CMD318}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD319), TFT_LCD_ARRAY_CMD319}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD320), TFT_LCD_ARRAY_CMD320}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD321), TFT_LCD_ARRAY_CMD321}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD322), TFT_LCD_ARRAY_CMD322}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD323), TFT_LCD_ARRAY_CMD323}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD324), TFT_LCD_ARRAY_CMD324}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD325), TFT_LCD_ARRAY_CMD325}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD326), TFT_LCD_ARRAY_CMD326}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD327), TFT_LCD_ARRAY_CMD327}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD328), TFT_LCD_ARRAY_CMD328}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD329), TFT_LCD_ARRAY_CMD329}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD330), TFT_LCD_ARRAY_CMD330}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD331), TFT_LCD_ARRAY_CMD331}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD332), TFT_LCD_ARRAY_CMD332}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD333), TFT_LCD_ARRAY_CMD333}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD334), TFT_LCD_ARRAY_CMD334}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD335), TFT_LCD_ARRAY_CMD335}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD336), TFT_LCD_ARRAY_CMD336}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD337), TFT_LCD_ARRAY_CMD337}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD338), TFT_LCD_ARRAY_CMD338}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD339), TFT_LCD_ARRAY_CMD339}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD340), TFT_LCD_ARRAY_CMD340}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD341), TFT_LCD_ARRAY_CMD341}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD342), TFT_LCD_ARRAY_CMD342}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD343), TFT_LCD_ARRAY_CMD343}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD344), TFT_LCD_ARRAY_CMD344}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD345), TFT_LCD_ARRAY_CMD345}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD346), TFT_LCD_ARRAY_CMD346}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD347), TFT_LCD_ARRAY_CMD347}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD348), TFT_LCD_ARRAY_CMD348}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD349), TFT_LCD_ARRAY_CMD349}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD350), TFT_LCD_ARRAY_CMD350}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD351), TFT_LCD_ARRAY_CMD351}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD352), TFT_LCD_ARRAY_CMD352}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD353), TFT_LCD_ARRAY_CMD353}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD354), TFT_LCD_ARRAY_CMD354}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD355), TFT_LCD_ARRAY_CMD355}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD356), TFT_LCD_ARRAY_CMD356}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD357), TFT_LCD_ARRAY_CMD357}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD358), TFT_LCD_ARRAY_CMD358}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD359), TFT_LCD_ARRAY_CMD359}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD360), TFT_LCD_ARRAY_CMD360}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD361), TFT_LCD_ARRAY_CMD361}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD362), TFT_LCD_ARRAY_CMD362}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD363), TFT_LCD_ARRAY_CMD363}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD364), TFT_LCD_ARRAY_CMD364}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD365), TFT_LCD_ARRAY_CMD365}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD366), TFT_LCD_ARRAY_CMD366}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD367), TFT_LCD_ARRAY_CMD367}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD368), TFT_LCD_ARRAY_CMD368}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD369), TFT_LCD_ARRAY_CMD369}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD370), TFT_LCD_ARRAY_CMD370}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD371), TFT_LCD_ARRAY_CMD371}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD372), TFT_LCD_ARRAY_CMD372}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD373), TFT_LCD_ARRAY_CMD373}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD374), TFT_LCD_ARRAY_CMD374}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD375), TFT_LCD_ARRAY_CMD375}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD376), TFT_LCD_ARRAY_CMD376}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD377), TFT_LCD_ARRAY_CMD377}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD378), TFT_LCD_ARRAY_CMD378}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD379), TFT_LCD_ARRAY_CMD379}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD380), TFT_LCD_ARRAY_CMD380}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD381), TFT_LCD_ARRAY_CMD381}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD382), TFT_LCD_ARRAY_CMD382}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD383), TFT_LCD_ARRAY_CMD383}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD384), TFT_LCD_ARRAY_CMD384}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD385), TFT_LCD_ARRAY_CMD385}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD386), TFT_LCD_ARRAY_CMD386}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD387), TFT_LCD_ARRAY_CMD387}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD388), TFT_LCD_ARRAY_CMD388}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD389), TFT_LCD_ARRAY_CMD389}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD390), TFT_LCD_ARRAY_CMD390}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD391), TFT_LCD_ARRAY_CMD391}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD392), TFT_LCD_ARRAY_CMD392}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD393), TFT_LCD_ARRAY_CMD393}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD394), TFT_LCD_ARRAY_CMD394}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD395), TFT_LCD_ARRAY_CMD395}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD396), TFT_LCD_ARRAY_CMD396}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD397), TFT_LCD_ARRAY_CMD397}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD398), TFT_LCD_ARRAY_CMD398}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD399), TFT_LCD_ARRAY_CMD399}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD400), TFT_LCD_ARRAY_CMD400}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD401), TFT_LCD_ARRAY_CMD401}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD402), TFT_LCD_ARRAY_CMD402}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD403), TFT_LCD_ARRAY_CMD403}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD404), TFT_LCD_ARRAY_CMD404}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD405), TFT_LCD_ARRAY_CMD405}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD406), TFT_LCD_ARRAY_CMD406}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD407), TFT_LCD_ARRAY_CMD407}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD408), TFT_LCD_ARRAY_CMD408}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD409), TFT_LCD_ARRAY_CMD409}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD410), TFT_LCD_ARRAY_CMD410}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD411), TFT_LCD_ARRAY_CMD411}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD412), TFT_LCD_ARRAY_CMD412}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD413), TFT_LCD_ARRAY_CMD413}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD414), TFT_LCD_ARRAY_CMD414}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD415), TFT_LCD_ARRAY_CMD415}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD416), TFT_LCD_ARRAY_CMD416}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD417), TFT_LCD_ARRAY_CMD417}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD418), TFT_LCD_ARRAY_CMD418}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD419), TFT_LCD_ARRAY_CMD419}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD420), TFT_LCD_ARRAY_CMD420}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD421), TFT_LCD_ARRAY_CMD421}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD422), TFT_LCD_ARRAY_CMD422}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD423), TFT_LCD_ARRAY_CMD423}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD424), TFT_LCD_ARRAY_CMD424}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD425), TFT_LCD_ARRAY_CMD425}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD426), TFT_LCD_ARRAY_CMD426}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD427), TFT_LCD_ARRAY_CMD427}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD428), TFT_LCD_ARRAY_CMD428}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD429), TFT_LCD_ARRAY_CMD429}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD430), TFT_LCD_ARRAY_CMD430}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD431), TFT_LCD_ARRAY_CMD431}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD432), TFT_LCD_ARRAY_CMD432}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD433), TFT_LCD_ARRAY_CMD433}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD434), TFT_LCD_ARRAY_CMD434}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD435), TFT_LCD_ARRAY_CMD435}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD436), TFT_LCD_ARRAY_CMD436}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD437), TFT_LCD_ARRAY_CMD437}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD438), TFT_LCD_ARRAY_CMD438}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD439), TFT_LCD_ARRAY_CMD439}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD440), TFT_LCD_ARRAY_CMD440}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD441), TFT_LCD_ARRAY_CMD441}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD442), TFT_LCD_ARRAY_CMD442}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD443), TFT_LCD_ARRAY_CMD443}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD444), TFT_LCD_ARRAY_CMD444}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD445), TFT_LCD_ARRAY_CMD445}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD446), TFT_LCD_ARRAY_CMD446}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD447), TFT_LCD_ARRAY_CMD447}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD448), TFT_LCD_ARRAY_CMD448}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD449), TFT_LCD_ARRAY_CMD449}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD450), TFT_LCD_ARRAY_CMD450}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD451), TFT_LCD_ARRAY_CMD451}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD452), TFT_LCD_ARRAY_CMD452}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD453), TFT_LCD_ARRAY_CMD453}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD454), TFT_LCD_ARRAY_CMD454}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD455), TFT_LCD_ARRAY_CMD455}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD456), TFT_LCD_ARRAY_CMD456}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD457), TFT_LCD_ARRAY_CMD457}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD458), TFT_LCD_ARRAY_CMD458}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD459), TFT_LCD_ARRAY_CMD459}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD460), TFT_LCD_ARRAY_CMD460}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD461), TFT_LCD_ARRAY_CMD461}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD462), TFT_LCD_ARRAY_CMD462}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD463), TFT_LCD_ARRAY_CMD463}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD464), TFT_LCD_ARRAY_CMD464}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD465), TFT_LCD_ARRAY_CMD465}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD466), TFT_LCD_ARRAY_CMD466}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD467), TFT_LCD_ARRAY_CMD467}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD468), TFT_LCD_ARRAY_CMD468}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD469), TFT_LCD_ARRAY_CMD469}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD470), TFT_LCD_ARRAY_CMD470}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD471), TFT_LCD_ARRAY_CMD471}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD472), TFT_LCD_ARRAY_CMD472}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD473), TFT_LCD_ARRAY_CMD473}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD474), TFT_LCD_ARRAY_CMD474}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD475), TFT_LCD_ARRAY_CMD475}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD476), TFT_LCD_ARRAY_CMD476}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD477), TFT_LCD_ARRAY_CMD477}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD478), TFT_LCD_ARRAY_CMD478}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD479), TFT_LCD_ARRAY_CMD479}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD480), TFT_LCD_ARRAY_CMD480}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD481), TFT_LCD_ARRAY_CMD481}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD482), TFT_LCD_ARRAY_CMD482}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD483), TFT_LCD_ARRAY_CMD483}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD484), TFT_LCD_ARRAY_CMD484}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD485), TFT_LCD_ARRAY_CMD485}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD486), TFT_LCD_ARRAY_CMD486}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD487), TFT_LCD_ARRAY_CMD487}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD488), TFT_LCD_ARRAY_CMD488}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD489), TFT_LCD_ARRAY_CMD489}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD490), TFT_LCD_ARRAY_CMD490}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD491), TFT_LCD_ARRAY_CMD491}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD492), TFT_LCD_ARRAY_CMD492}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD493), TFT_LCD_ARRAY_CMD493}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD494), TFT_LCD_ARRAY_CMD494}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD495), TFT_LCD_ARRAY_CMD495}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD496), TFT_LCD_ARRAY_CMD496}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD497), TFT_LCD_ARRAY_CMD497}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD498), TFT_LCD_ARRAY_CMD498}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD499), TFT_LCD_ARRAY_CMD499}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD500), TFT_LCD_ARRAY_CMD500}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD501), TFT_LCD_ARRAY_CMD501}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD502), TFT_LCD_ARRAY_CMD502}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD503), TFT_LCD_ARRAY_CMD503}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD504), TFT_LCD_ARRAY_CMD504}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD505), TFT_LCD_ARRAY_CMD505}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD506), TFT_LCD_ARRAY_CMD506}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD507), TFT_LCD_ARRAY_CMD507}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD508), TFT_LCD_ARRAY_CMD508}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD509), TFT_LCD_ARRAY_CMD509}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD510), TFT_LCD_ARRAY_CMD510}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD511), TFT_LCD_ARRAY_CMD511}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD512), TFT_LCD_ARRAY_CMD512}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD513), TFT_LCD_ARRAY_CMD513}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD514), TFT_LCD_ARRAY_CMD514}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD515), TFT_LCD_ARRAY_CMD515}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD516), TFT_LCD_ARRAY_CMD516}
+	,
+	{DSI_DI_DCS_SWRITE, 1, 150, sizeof(TFT_LCD_ARRAY_CMD517),
+	 TFT_LCD_ARRAY_CMD517}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD518), TFT_LCD_ARRAY_CMD518}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD519), TFT_LCD_ARRAY_CMD519}
+	,
+	{DSI_DI_DCS_SWRITE1, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD520), TFT_LCD_ARRAY_CMD520}
+	,
+	{DSI_DI_DCS_SWRITE, 1, UNLOCK_DELAY,
+	 sizeof(TFT_LCD_ARRAY_CMD521), TFT_LCD_ARRAY_CMD521}
+};
+
+
+#endif
