@@ -2,7 +2,7 @@
 
 .PHONY: build-uboot clean-uboot
 
-UBOOT_PATH := $(ANDROID_BUILD_TOP)/bootable/bootloader-abox_edge/uboot
+UBOOT_PATH := $(ANDROID_BUILD_TOP)/bootable/brillo_iap140_uboot
 UBOOT_OUTPUT :=  $(abspath $(PRODUCT_OUT)/obj/uboot)
 
 SECURITY_REGION_SIZE_MB ?= 8
