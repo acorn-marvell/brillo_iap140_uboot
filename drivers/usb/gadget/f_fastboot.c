@@ -850,7 +850,7 @@ static void cb_flash(struct usb_ep *ep, struct usb_request *req)
 
 	//strcpy(response, "FAILno flash device defined");
 #ifdef CONFIG_FASTBOOT_FLASH_MMC_DEV
-	mkbootimg((void *)(uintptr_t)CONFIG_USB_FASTBOOT_BUF_ADDR);
+	//mkbootimg((void *)(uintptr_t)CONFIG_USB_FASTBOOT_BUF_ADDR);
 	fb_mmc_flash_write(cmd, (void *)CONFIG_USB_FASTBOOT_BUF_ADDR,
 			   download_bytes, response);
 #endif
