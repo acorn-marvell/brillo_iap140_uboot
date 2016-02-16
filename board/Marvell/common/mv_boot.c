@@ -299,6 +299,7 @@ int do_mrvlboot(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 		printf("mrvlboot, fastboot mode\n");
 		fastboot_key_set_led();
 		run_command("fb", 0);
+		return 0;
 	} else
 		printf("mrvlboot, normal mode\n");
 
