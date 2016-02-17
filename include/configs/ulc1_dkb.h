@@ -16,6 +16,8 @@
  * Version number information
  */
 #define CONFIG_IDENT_STRING	"\nMarvell PXA1908 DKB"
+#define CONFIG_PRODUCT_STRING	"IAP140"
+
 /*
  * High Level Configuration Options
  */

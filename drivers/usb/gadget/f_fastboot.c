@@ -539,6 +539,8 @@ static void cb_getvar(struct usb_ep *ep, struct usb_request *req)
 	} else if (!strcmp_l1("current-slot", cmd)) {
 		strncat(response, bootctrl_get_active_slot_suffix(), chars_left);
 #endif
+	} else if(!strcmp_l1("product",cmd)){
+		strncat(response, CONFIG_PRODUCT_STRING, chars_left);
 	} else if (!strcmp_l1("partition-type", cmd)) {
 		var_partition_type(cmd + 15, response);
 	} else if (!strcmp_l1("partition-size", cmd)) {
