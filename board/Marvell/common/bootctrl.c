@@ -15,7 +15,7 @@
 #include <android_image.h>
 #include "bootctrl.h"
 
-#if 1
+#if 0
 void hexDump (char *desc, void *addr, int len) {
     int i;
     unsigned char buff[17];
@@ -238,7 +238,7 @@ unsigned long bootctrl_get_boot_addr(int slot)
 char* bootctrl_get_boot_slot_suffix(int slot)
 {
 	if(slot > SLOTS_NUM || slot < 0)
-		return NULL;
+		return "";
 	return bootslot_suffix[slot];
 }
 
@@ -260,7 +260,7 @@ int bootctrl_set_active_slot(char *slot_suffix, char *response)
 	BrilloBootInfo *pbbi;
 	BrilloSlotInfo *pbsi;
 	
-	strncpy(response, "FAIL", 4);
+	strncpy(response, "FAIL\0", 5);
 
 	if(bootctrl_get_metadata() != 0){
 		strcat(response, "can not get bl data");
