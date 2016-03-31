@@ -1,16 +1,20 @@
-# brillo_iap140_uboot
+Usage
+=====
 
-Where to get and compile the source code
-========================================
+## 1. Clone the source code of u-boot
+<pre>
+  <code>
+    $ cd ${ANDROID_BUILD_TOP}/bootable
+    $ git clone https://github.com/acorn-marvell/brillo_iap140_uboot.git
+  </code>
+</pre>
 
-1. Clone the source code of u-boot
+## 2. Build u-boot
+<pre>
+  <code>
+    $ cd brillo_iap140_uboot
+    $ mm
+  </code>
+</pre>
 
-  $ cd ${ANDROID_BUILD_TOP}/bootable
-  $ git clone https://github.com/acorn-marvell/brillo_iap140_uboot.git
-
-2. Build u-boot
-
-  $ cd brillo_iap140_uboot
-  $ mm
-
-3. In the directory ${ANDROID_PRODUCT_OUT} the u-boot.bin is generated
+## 3. In the directory ${ANDROID_PRODUCT_OUT} the u-boot.bin is generated
