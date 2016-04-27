@@ -192,6 +192,9 @@ int do_mrvlboot(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 #ifdef CONFIG_MULTIPLE_SLOTS
 	int slot;
 #endif
+        block_dev_desc_t *dev;
+        disk_partition_t info;
+        unsigned long recovery_image_addr;
 
 	/* The bootimg/recoveryimg header + uImage header ddr parse address */
 	struct andr_img_hdr *ahdr =
@@ -199,6 +202,19 @@ int do_mrvlboot(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 
 	recovery_flag = get_recovery_flag();
 	fastboot_flag = fastboot_key_detect();
+
+        dev = get_dev("mmc", CONFIG_FASTBOOT_FLASH_MMC_DEV);
+        if(!dev){
+                printf("Failed to get mmc device!\n");
+                return -1;
+        }
+        /*Parse flash address from the partition name*/ 
+        if (get_partition_info_efi_by_name(dev, "recovery", &info)){
+                printf("Failed to get partition(recovery) info!\n");
+                return -1;
+        }
+        recovery_image_addr = info.start * dev->blksz;
+
 	/*
 	 * OBM doesn't load kernel and ramdisk for nontrusted boot, but it
 	 * still passes validation_status and loading_status as 1 to uboot
@@ -211,10 +227,16 @@ int do_mrvlboot(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 	if (slot == -1)
 		recovery_flag = 1;
 
-	base_emmc_addr = recovery_flag ? RECOVERYIMG_EMMC_ADDR :
+	base_emmc_addr = recovery_flag ? recovery_image_addr :
 							bootctrl_get_boot_addr(slot);
 #else
-	base_emmc_addr = recovery_flag ? RECOVERYIMG_EMMC_ADDR : BOOTIMG_EMMC_ADDR;
+        if(get_partition_info_efi_by_name(dev, "boot", &info)){
+                printf("Failed to get partition(boot) info!\n");
+                return -1;
+        }
+        unsigned long boot_image_addr = info.start * dev->blksz;
+
+	base_emmc_addr = recovery_flag ? recovery_image_addr : boot_image_addr;
 #endif
 
 	load_image_head(ahdr, base_emmc_addr);
@@ -228,10 +250,10 @@ int do_mrvlboot(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 		ramdisk_size = ALIGN(ahdr->ramdisk_size, ahdr->page_size);
 	}
 	/* calculate mmc block number */
-	kernel_offset /= 512;
-	ramdisk_offset /= 512;
-	kernel_size /= 512;
-	ramdisk_size /= 512;
+	kernel_offset /= dev->blksz;
+	ramdisk_offset /= dev->blksz;
+	kernel_size /= dev->blksz;
+	ramdisk_size /= dev->blksz;
 
 	/* Load kernel */
 	kernel_load_addr = CONFIG_LOADADDR;

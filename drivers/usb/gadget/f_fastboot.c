@@ -827,6 +827,8 @@ static void cb_set_active(struct usb_ep *ep, struct usb_request *req)
 
 #ifdef CONFIG_FASTBOOT_FLASH
 #define SECTOR_SIZE 512
+/*Remove it because it is not called*/
+#if 0
 static int mkbootimg(void *kernel)
 {
 #ifdef CONFIG_ANDROID_BOOT_IMAGE
@@ -877,6 +879,7 @@ static int mkbootimg(void *kernel)
 	run_command(cmd, 0);
 	return 1;
 }
+#endif
 
 static void cb_flash(struct usb_ep *ep, struct usb_request *req)
 {

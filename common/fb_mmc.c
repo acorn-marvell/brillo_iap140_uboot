@@ -84,6 +84,9 @@ void fb_mmc_flash_write(const char *cmd, void *download_buffer,
 			unsigned int download_bytes, char *response)
 {
 	int ret;
+        int expected;
+        int pte_blk_cnt;
+
 	block_dev_desc_t *dev_desc;
 	disk_partition_t info;
 
@@ -91,10 +94,8 @@ void fb_mmc_flash_write(const char *cmd, void *download_buffer,
 	response_str = response;
 
 	legacy_mbr *mbr;
-	gpt_header *gpt_h;
-	gpt_entry *gpt_e;
-
-	int expected;
+	gpt_header *primary_gpt_h;
+        gpt_entry *second_gpt_e;
 
 	dev_desc = get_dev("mmc", CONFIG_FASTBOOT_FLASH_MMC_DEV);
 	if (!dev_desc || dev_desc->type == DEV_TYPE_UNKNOWN) {
@@ -158,16 +159,74 @@ void fb_mmc_flash_write(const char *cmd, void *download_buffer,
 	}else 
 #endif
 	if (!strncmp("partition", cmd, strlen("partition"))) {
-		/* do sanity check of the download data */
-		expected = sizeof(legacy_mbr)+PAD_TO_BLOCKSIZE(sizeof(gpt_header), dev_desc)+PAD_TO_BLOCKSIZE(GPT_ENTRY_NUMBERS
-					       * sizeof(gpt_entry), dev_desc);
-
+                /*do sanity check of the downloader data */
+                expected = sizeof(legacy_mbr) + 2 * ((PAD_TO_BLOCKSIZE(sizeof(gpt_header), dev_desc) + PAD_TO_BLOCKSIZE(GPT_ENTRY_NUMBERS
+                                               * sizeof(gpt_entry), dev_desc)));
+                
 		if(expected != download_bytes){
 			error("wrong size for download data, expected: %d\n", expected);
 			fastboot_fail("wrong size for download data");
 			return;
 		}
 
+		mbr = download_buffer;
+		primary_gpt_h = (void *)mbr + sizeof(legacy_mbr);
+                pte_blk_cnt = BLOCK_CNT((primary_gpt_h->num_partition_entries * sizeof(gpt_entry)), dev_desc);
+                second_gpt_e = primary_gpt_h + PAD_TO_BLOCKSIZE(sizeof(gpt_header), dev_desc)
+                                             + PAD_TO_BLOCKSIZE(GPT_ENTRY_NUMBERS * sizeof(gpt_entry), dev_desc);
+
+		/* Check the MBR signature */
+		if (le16_to_cpu(mbr->signature) != MSDOS_MBR_SIGNATURE){
+			error("MBR signature is wrong:" 
+                                "0x%X != 0x%X\n",
+				le16_to_cpu(mbr->signature),
+				MSDOS_MBR_SIGNATURE);
+			fastboot_fail("wrong data");
+			return;
+		}
+
+		/* Check the GPT header signature */
+		if (le64_to_cpu(primary_gpt_h->signature) != GPT_HEADER_SIGNATURE) {
+			error("GUID Partition Table Header signature is wrong:"
+				"0x%llX != 0x%llX\n",
+				le64_to_cpu(primary_gpt_h->signature),
+				GPT_HEADER_SIGNATURE);
+			fastboot_fail("wrong data");
+			return;
+		}
+
+		/* Write the Legacy MBR */
+		if (dev_desc->block_write(dev_desc->dev, 0, 1, mbr) != 1){
+                        printf("Write mbr failed!\n");
+                        goto err;
+                }
+
+		/* Write the First GPT to the block right after the Legacy MBR */
+		if (dev_desc->block_write(dev_desc->dev, 1, pte_blk_cnt + 1, primary_gpt_h) != pte_blk_cnt + 1){
+                        printf("Write primary gpt failed!\n");
+                        goto err;
+                }
+               
+                /*Write the Second GPT at the end of the block*/
+                lbaint_t second_gpt_offset = le32_to_cpu(primary_gpt_h->last_usable_lba + 1);
+                if(dev_desc->block_write(dev_desc->dev, second_gpt_offset,
+                                         pte_blk_cnt + 1, second_gpt_e) != pte_blk_cnt + 1){
+                       printf("write second gpt  failed!\n");
+                       goto err;
+                }
+   
+#if 0
+		/* do sanity check of the download data */
+		expected = sizeof(legacy_mbr)+ 1 * (PAD_TO_BLOCKSIZE(sizeof(gpt_header), dev_desc)+PAD_TO_BLOCKSIZE(GPT_ENTRY_NUMBERS
+					       * sizeof(gpt_entry), dev_desc));
+		/*if(expected != download_bytes){
+			error("wrong size for download data, expected: %d\n", expected);
+			fastboot_fail("wrong size for download data");
+			return;
+		}*/
+                printf("legacy_mbr is %d, gpt_header is %d, gpt_entry is %d\n",sizeof(legacy_mbr),PAD_TO_BLOCKSIZE(sizeof(gpt_header), 
+                                    dev_desc),PAD_TO_BLOCKSIZE(GPT_ENTRY_NUMBERS * sizeof(gpt_entry), dev_desc));
+                 
 		mbr = download_buffer;
 		gpt_h = (void *)mbr + sizeof(legacy_mbr);
 		gpt_e = (void *)gpt_h+PAD_TO_BLOCKSIZE(sizeof(gpt_header), dev_desc);
@@ -199,19 +258,35 @@ void fb_mmc_flash_write(const char *cmd, void *download_buffer,
 
 		printf("max lba: %x\n", (u32) dev_desc->lba);
 
+                printf("last_usable_lba is %d, my_lba is %d, pte_blk_cnt is %d\n",le32_to_cpu(gpt_h->last_usable_lba + 1),le32_to_cpu(gpt_h->my_lba),
+                        pte_blk_cnt);
 		/* Write the Legacy MBR */
-		if (dev_desc->block_write(dev_desc->dev, 0, 1, mbr) != 1)
+		if (dev_desc->block_write(dev_desc->dev, 0, 1, mbr) != 1){
+			printf("Write mbr failed!\n");
 			goto err;
+                }
+                printf("last_usable_lba is %d, my_lba is %d, pte_blk_cnt is %d\n",le32_to_cpu(gpt_h->last_usable_lba + 1),le32_to_cpu(gpt_h->my_lba),
+                        pte_blk_cnt);
 
 		/* Write the First GPT to the block right after the Legacy MBR */
-		if (dev_desc->block_write(dev_desc->dev, 1, 1, gpt_h) != 1)
+		if (dev_desc->block_write(dev_desc->dev, 1, 1, gpt_h) != 1){
+                        printf("Write gpt header failed!\n");
 			goto err;
+                }
+                printf("last_usable_lba is %d, my_lba is %d, pte_blk_cnt is %d\n",le32_to_cpu(gpt_h->last_usable_lba + 1),le32_to_cpu(gpt_h->my_lba),
+                        pte_blk_cnt);
 
 		if (dev_desc->block_write(dev_desc->dev, 2, pte_blk_cnt, gpt_e)
-		    != pte_blk_cnt)
+		    != pte_blk_cnt){
+                        printf("Write gpt_e failed!\n");
 			goto err;
+                 }
+                printf("last_usable_lba is %d, my_lba is %d, pte_blk_cnt is %d\n",le32_to_cpu(gpt_h->last_usable_lba + 1),le32_to_cpu(gpt_h->my_lba),
+                        pte_blk_cnt);
 
 		/* recalculate the values for the Second GPT Header */
+                printf("last_usable_lba is %d, my_lba is %d, pte_blk_cnt is %d\n",le32_to_cpu(gpt_h->last_usable_lba + 1),le32_to_cpu(gpt_h->my_lba),
+                        pte_blk_cnt);
 		val = le64_to_cpu(gpt_h->my_lba);
 		gpt_h->my_lba = gpt_h->alternate_lba;
 		gpt_h->alternate_lba = cpu_to_le64(val);
@@ -221,15 +296,22 @@ void fb_mmc_flash_write(const char *cmd, void *download_buffer,
 				      le32_to_cpu(gpt_h->header_size));
 		gpt_h->header_crc32 = cpu_to_le32(calc_crc32);
 
+                printf("last_usable_lba is %d, my_lba is %d, pte_blk_cnt is %d\n",le32_to_cpu(gpt_h->last_usable_lba + 1),le32_to_cpu(gpt_h->my_lba),
+                        pte_blk_cnt);
+ 
 		if (dev_desc->block_write(dev_desc->dev,
 					  le32_to_cpu(gpt_h->last_usable_lba + 1),
-					  pte_blk_cnt, gpt_e) != pte_blk_cnt)
-			goto err;
+					  pte_blk_cnt, gpt_e) != pte_blk_cnt){
+			printf("Write second gpt_e failed!\n");
+                        goto err;
+                }
 
 		if (dev_desc->block_write(dev_desc->dev,
-					  le32_to_cpu(gpt_h->my_lba), 1, gpt_h) != 1)
+					  le32_to_cpu(gpt_h->my_lba), 1, gpt_h) != 1){
+                        printf("Write second gpt_h failed!\n");
 			goto err;
-
+                }
+#endif
 		printf("GPT successfully written to block device!\n");
 		fastboot_okay("");
 		return;

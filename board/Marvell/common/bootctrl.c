@@ -229,10 +229,32 @@ static int bootctrl_metadata_setdefault(void)
 
 unsigned long bootctrl_get_boot_addr(int slot)
 {
-	if (slot == 1)
-		return BOOTIMG_B_EMMC_ADDR;
-	else
-		return BOOTIMG_EMMC_ADDR;
+        block_dev_desc_t *dev;
+        disk_partition_t info;
+        unsigned long boot_a_image_addr, boot_b_image_addr;
+
+        dev = get_dev("mmc", CONFIG_FASTBOOT_FLASH_MMC_DEV);
+        if(!dev){
+                printf("Failed to get mmc device!\n");
+                return 0;
+        }
+ 
+        if(get_partition_info_efi_by_name(dev, "boot_a", &info)){
+                printf("Failed to get partition(boot_a) info!\n");
+                return -1;
+        }
+        boot_a_image_addr = info.start * dev->blksz;
+
+        if(get_partition_info_efi_by_name(dev, "boot_b", &info)){
+               printf("Failed to get partition(boot_b) info!\n");
+               return -1;
+        }
+        boot_b_image_addr = info.start * dev->blksz;
+
+        if (slot == 1)
+                return boot_b_image_addr;
+        else
+                return boot_a_image_addr;
 }
 
 char* bootctrl_get_boot_slot_suffix(int slot)
