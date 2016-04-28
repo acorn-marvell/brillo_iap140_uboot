@@ -10,7 +10,7 @@
 #include <aboot.h>
 #include <sparse_format.h>
 #include <mmc.h>
-
+#include "persistdata.h"
 /* The 64 defined bytes plus the '\0' */
 #define RESPONSE_LEN	(64 + 1)
 
@@ -94,8 +94,8 @@ void fb_mmc_flash_write(const char *cmd, void *download_buffer,
 	response_str = response;
 
 	legacy_mbr *mbr;
-	gpt_header *primary_gpt_h;
-        gpt_entry *second_gpt_e;
+	gpt_header *gpt_h;
+        gpt_entry *gpt_e;
 
 	dev_desc = get_dev("mmc", CONFIG_FASTBOOT_FLASH_MMC_DEV);
 	if (!dev_desc || dev_desc->type == DEV_TYPE_UNKNOWN) {
@@ -156,9 +156,39 @@ void fb_mmc_flash_write(const char *cmd, void *download_buffer,
 		/* switch back to main part */
 		sprintf(cmd_buf, "mmc dev %d 0", CONFIG_FASTBOOT_FLASH_MMC_DEV);
 		run_command(cmd_buf, 0);
-	}else 
+	}
 #endif
-	if (!strncmp("partition", cmd, strlen("partition"))) {
+	if (!strncmp("persistdata", cmd, strlen("persistdata"))) {
+
+                char cmd_buf[64] = {0};
+        	ulong mmc_part = PD_MMC_PART;
+        	ulong mmc_flash_start = PD_MMC_OFFSET;
+
+                lbaint_t pd_offset = mmc_flash_start/dev_desc->blksz;
+                lbaint_t pd_blkcnt = BLOCK_CNT(download_bytes, dev_desc);
+
+		sprintf(cmd_buf, "mmc dev %d %d", CONFIG_FASTBOOT_FLASH_MMC_DEV, mmc_part);
+		run_command(cmd_buf, 0);
+
+		if(dev_desc->lba != 0){
+			if (dev_desc->block_write(dev_desc->dev, pd_offset, pd_blkcnt, download_buffer)  != pd_blkcnt){
+				error("flash data failed:\n");
+				fastboot_fail("flash data failed:");
+			}else{
+                                printf("Persistdata successfully written to block device!\n");
+				fastboot_okay("");
+			}
+		}else{
+			error("Invalid mmc part\n");
+			fastboot_fail("Invalid mmc part");
+		}
+
+		/* switch back to main part */
+		sprintf(cmd_buf, "mmc dev %d 0", CONFIG_FASTBOOT_FLASH_MMC_DEV);
+		run_command(cmd_buf, 0);
+       }
+       else if (!strncmp("partition", cmd, strlen("partition"))) {
+#if 0
                 /*do sanity check of the downloader data */
                 expected = sizeof(legacy_mbr) + 2 * ((PAD_TO_BLOCKSIZE(sizeof(gpt_header), dev_desc) + PAD_TO_BLOCKSIZE(GPT_ENTRY_NUMBERS
                                                * sizeof(gpt_entry), dev_desc)));
@@ -214,18 +244,16 @@ void fb_mmc_flash_write(const char *cmd, void *download_buffer,
                        printf("write second gpt  failed!\n");
                        goto err;
                 }
-   
-#if 0
+#endif
+#if 1
 		/* do sanity check of the download data */
 		expected = sizeof(legacy_mbr)+ 1 * (PAD_TO_BLOCKSIZE(sizeof(gpt_header), dev_desc)+PAD_TO_BLOCKSIZE(GPT_ENTRY_NUMBERS
 					       * sizeof(gpt_entry), dev_desc));
-		/*if(expected != download_bytes){
+		if(expected != download_bytes){
 			error("wrong size for download data, expected: %d\n", expected);
 			fastboot_fail("wrong size for download data");
 			return;
-		}*/
-                printf("legacy_mbr is %d, gpt_header is %d, gpt_entry is %d\n",sizeof(legacy_mbr),PAD_TO_BLOCKSIZE(sizeof(gpt_header), 
-                                    dev_desc),PAD_TO_BLOCKSIZE(GPT_ENTRY_NUMBERS * sizeof(gpt_entry), dev_desc));
+		}
                  
 		mbr = download_buffer;
 		gpt_h = (void *)mbr + sizeof(legacy_mbr);
@@ -258,35 +286,25 @@ void fb_mmc_flash_write(const char *cmd, void *download_buffer,
 
 		printf("max lba: %x\n", (u32) dev_desc->lba);
 
-                printf("last_usable_lba is %d, my_lba is %d, pte_blk_cnt is %d\n",le32_to_cpu(gpt_h->last_usable_lba + 1),le32_to_cpu(gpt_h->my_lba),
-                        pte_blk_cnt);
 		/* Write the Legacy MBR */
 		if (dev_desc->block_write(dev_desc->dev, 0, 1, mbr) != 1){
 			printf("Write mbr failed!\n");
 			goto err;
                 }
-                printf("last_usable_lba is %d, my_lba is %d, pte_blk_cnt is %d\n",le32_to_cpu(gpt_h->last_usable_lba + 1),le32_to_cpu(gpt_h->my_lba),
-                        pte_blk_cnt);
 
 		/* Write the First GPT to the block right after the Legacy MBR */
 		if (dev_desc->block_write(dev_desc->dev, 1, 1, gpt_h) != 1){
                         printf("Write gpt header failed!\n");
 			goto err;
                 }
-                printf("last_usable_lba is %d, my_lba is %d, pte_blk_cnt is %d\n",le32_to_cpu(gpt_h->last_usable_lba + 1),le32_to_cpu(gpt_h->my_lba),
-                        pte_blk_cnt);
 
 		if (dev_desc->block_write(dev_desc->dev, 2, pte_blk_cnt, gpt_e)
 		    != pte_blk_cnt){
                         printf("Write gpt_e failed!\n");
 			goto err;
                  }
-                printf("last_usable_lba is %d, my_lba is %d, pte_blk_cnt is %d\n",le32_to_cpu(gpt_h->last_usable_lba + 1),le32_to_cpu(gpt_h->my_lba),
-                        pte_blk_cnt);
 
 		/* recalculate the values for the Second GPT Header */
-                printf("last_usable_lba is %d, my_lba is %d, pte_blk_cnt is %d\n",le32_to_cpu(gpt_h->last_usable_lba + 1),le32_to_cpu(gpt_h->my_lba),
-                        pte_blk_cnt);
 		val = le64_to_cpu(gpt_h->my_lba);
 		gpt_h->my_lba = gpt_h->alternate_lba;
 		gpt_h->alternate_lba = cpu_to_le64(val);
@@ -296,9 +314,6 @@ void fb_mmc_flash_write(const char *cmd, void *download_buffer,
 				      le32_to_cpu(gpt_h->header_size));
 		gpt_h->header_crc32 = cpu_to_le32(calc_crc32);
 
-                printf("last_usable_lba is %d, my_lba is %d, pte_blk_cnt is %d\n",le32_to_cpu(gpt_h->last_usable_lba + 1),le32_to_cpu(gpt_h->my_lba),
-                        pte_blk_cnt);
- 
 		if (dev_desc->block_write(dev_desc->dev,
 					  le32_to_cpu(gpt_h->last_usable_lba + 1),
 					  pte_blk_cnt, gpt_e) != pte_blk_cnt){
