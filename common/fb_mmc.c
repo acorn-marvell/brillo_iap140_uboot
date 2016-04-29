@@ -161,23 +161,34 @@ void fb_mmc_flash_write(const char *cmd, void *download_buffer,
 	if (!strncmp("persistdata", cmd, strlen("persistdata"))) {
 
                 char cmd_buf[64] = {0};
-        	ulong mmc_part = PD_MMC_PART;
         	ulong mmc_flash_start = PD_MMC_OFFSET;
-
                 lbaint_t pd_offset = mmc_flash_start/dev_desc->blksz;
                 lbaint_t pd_blkcnt = BLOCK_CNT(download_bytes, dev_desc);
 
-		sprintf(cmd_buf, "mmc dev %d %d", CONFIG_FASTBOOT_FLASH_MMC_DEV, mmc_part);
-		run_command(cmd_buf, 0);
-
 		if(dev_desc->lba != 0){
-			if (dev_desc->block_write(dev_desc->dev, pd_offset, pd_blkcnt, download_buffer)  != pd_blkcnt){
-				error("flash data failed:\n");
-				fastboot_fail("flash data failed:");
-			}else{
-                                printf("Persistdata successfully written to block device!\n");
-				fastboot_okay("");
-			}
+                        /*Write persistdata to boot0*/
+                        sprintf(cmd_buf, "mmc dev %d %d", CONFIG_FASTBOOT_FLASH_MMC_DEV, PD_MMC_PART);
+                        run_command(cmd_buf, 0);
+		        if (dev_desc->block_write(dev_desc->dev, pd_offset, pd_blkcnt, download_buffer)  != pd_blkcnt)
+                                goto err; 
+
+                        /*Write persistdata to boot1*/
+                        sprintf(cmd_buf, "mmc dev %d %d", CONFIG_FASTBOOT_FLASH_MMC_DEV, PD_MMC_PART_RECOVERY);
+                        run_command(cmd_buf, 0);
+                        if (dev_desc->block_write(dev_desc->dev, pd_offset, pd_blkcnt, download_buffer)  != pd_blkcnt)
+                                goto err;
+
+                        printf("Persistdata successfully written to block device!\n");
+                        fastboot_okay("");
+
+                        /* switch back to main part */
+                        sprintf(cmd_buf, "mmc dev %d 0", CONFIG_FASTBOOT_FLASH_MMC_DEV);
+                        run_command(cmd_buf, 0);
+                        return;
+                err:
+                        error("Write persistdata failed:\n");
+                        fastboot_fail("flash data failed:");
+                        return;
 		}else{
 			error("Invalid mmc part\n");
 			fastboot_fail("Invalid mmc part");
@@ -318,20 +329,20 @@ void fb_mmc_flash_write(const char *cmd, void *download_buffer,
 					  le32_to_cpu(gpt_h->last_usable_lba + 1),
 					  pte_blk_cnt, gpt_e) != pte_blk_cnt){
 			printf("Write second gpt_e failed!\n");
-                        goto err;
+                        goto error;
                 }
 
 		if (dev_desc->block_write(dev_desc->dev,
 					  le32_to_cpu(gpt_h->my_lba), 1, gpt_h) != 1){
                         printf("Write second gpt_h failed!\n");
-			goto err;
+			goto error;
                 }
 #endif
 		printf("GPT successfully written to block device!\n");
 		fastboot_okay("");
 		return;
 
-	 err:
+	 error:
 		error("flash partition data failed: '%s'\n", cmd);
 		fastboot_fail("cannot flash partition");
 		return;
