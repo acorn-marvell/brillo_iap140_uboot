@@ -1249,6 +1249,18 @@ int misc_init_r(void)
 		run_command("fb", 0);
 	}
 
+        /* fastboot reboot bootloader */
+        char *s1 = getenv("reboot-bootloader");
+        if(s1 != NULL)
+        {
+               if(!(strcmp(s1, "yes")))
+               {
+                   setenv("reboot-bootloader", "no");
+                   saveenv();
+                   run_command("fb", 0);
+               }
+        }
+
 	/* get CP ddr range */
 	//parse_cp_ddr_range();
 
