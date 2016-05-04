@@ -432,10 +432,13 @@ static void cb_reboot(struct usb_ep *ep, struct usb_request *req)
 	char *cmd = req->buf;
 
 	if (strncmp(cmd + 6, "-bootloader", 11) == 0)
-		stop_fastboot = 1;
-	else
-		fastboot_func->in_req->complete = compl_do_reset;
-	fastboot_tx_write_str("OKAY");
+        {
+                setenv("reboot-bootloader", "yes");
+                saveenv();
+        }
+
+        fastboot_func->in_req->complete = compl_do_reset;
+        fastboot_tx_write_str("OKAY");
 }
 
 static int strcmp_l1(const char *s1, const char *s2)
