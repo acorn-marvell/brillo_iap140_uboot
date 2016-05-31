@@ -21,3 +21,4 @@ obj-$(CONFIG_POWER_OFF_CHARGE) += charge.o
 obj-$(CONFIG_PERSIST_DATA) += persistdata.o
 
 obj-y += mv_cp.o tim.o
+obj-y += blob.o fb_flashing.o

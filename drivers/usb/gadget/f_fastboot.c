@@ -31,6 +31,8 @@
 #include <bootctrl.h>
 #endif
 
+#include <fb_flashing.h>
+
 #define FASTBOOT_VERSION		"0.4"
 
 #define FASTBOOT_INTERFACE_CLASS	0xff
@@ -823,7 +825,7 @@ static void cb_set_active(struct usb_ep *ep, struct usb_request *req)
 	}
 
 	bootctrl_set_active_slot(cmd, response);
-	
+
 	fastboot_tx_write_str(response);
 }
 #endif
@@ -884,15 +886,63 @@ static int mkbootimg(void *kernel)
 }
 #endif
 
+static void cb_flashing(struct usb_ep *ep, struct usb_request *req)
+{
+	char *cmd = req->buf;
+	char response[RESPONSE_LEN];
+	flashing_state state;
+
+	strsep(&cmd, " ");
+	if (!cmd) {
+		error("fastboot flashing needs parameter\n");
+		fastboot_tx_write_str("FAILmissing lock/unlock parameter");
+		return;
+	}
+
+	if (!strcmp(cmd, "lock")) {
+		state = lock_device();
+		if (state == FB_FLASHING_LOCK_DEVICE_OK) {
+			snprintf(response, RESPONSE_LEN, "OKAY");
+		} else if (state == FB_FLASHING_DEVICE_ALREADY_LOCKED) {
+			snprintf(response, RESPONSE_LEN, "FAIL%s", "already locked");
+		} else if (state == FB_FLASHING_LOCK_DEVICE_FAILED) {
+			snprintf(response, RESPONSE_LEN, "FAIL%s", "lock failed");
+		}
+	} else if (!strcmp(cmd, "unlock")) {
+		state = unlock_device();
+		if (state == FB_FLASHING_UNLOCK_DEVICE_OK) {
+			snprintf(response, RESPONSE_LEN, "OKAY");
+		} else if (state == FB_FLASHING_DEVICE_ALREADY_UNLOCKED) {
+			snprintf(response, RESPONSE_LEN, "FAIL%s", "already unlocked");
+		} else if (state == FB_FLASHING_UNLOCK_DEVICE_FAILED) {
+			snprintf(response, RESPONSE_LEN, "FAIL%s", "unlock failed");
+		}
+	} else {
+		error("invalid parameter for fastboot flashing command");
+		snprintf(response, RESPONSE_LEN, "FAIL%s", "parameter not supported");
+	}
+
+	fastboot_tx_write_str(response);
+	return;
+}
+
 static void cb_flash(struct usb_ep *ep, struct usb_request *req)
 {
 	char *cmd = req->buf;
 	char response[RESPONSE_LEN];
+	device_state state;
 
 	strsep(&cmd, ":");
 	if (!cmd) {
 		error("missing partition name\n");
 		fastboot_tx_write_str("FAILmissing partition name");
+		return;
+	}
+
+	state = get_device_state(NULL);
+	if (state == FB_FLASHING_DEVICE_LOCKED) {
+		error("device locked\n");
+		fastboot_tx_write_str("FAILdevice locked");
 		return;
 	}
 
@@ -909,11 +959,19 @@ static void cb_erase(struct usb_ep *ep, struct usb_request *req)
 {
 	char *cmd = req->buf;
 	char response[RESPONSE_LEN];
+	device_state state;
 
 	strsep(&cmd, ":");
 	if (!cmd) {
 		error("missing partition name\n");
 		fastboot_tx_write_str("FAILmissing partition name");
+		return;
+	}
+
+	state = get_device_state(NULL);
+	if (state == FB_FLASHING_DEVICE_LOCKED) {
+		error("device locked\n");
+		fastboot_tx_write_str("FAILdevice locked");
 		return;
 	}
 
@@ -960,6 +1018,10 @@ static const struct cmd_dispatch_info cmd_dispatch_info[] = {
 	},
 #endif
 #ifdef CONFIG_FASTBOOT_FLASH
+	{
+		.cmd = "flashing",
+		.cb = cb_flashing,
+	},
 	{
 		.cmd = "flash",
 		.cb = cb_flash,
