@@ -10,6 +10,9 @@
 #include <aboot.h>
 #include <sparse_format.h>
 #include <mmc.h>
+#ifdef CONFIG_FASTBOOT_BVB
+#include <bvb_mmc.h>
+#endif
 
 /* The 64 defined bytes plus the '\0' */
 #define RESPONSE_LEN	(64 + 1)
@@ -79,6 +82,48 @@ static void erase_image(block_dev_desc_t *dev_desc, disk_partition_t *info,
 	       info->size, part_name);
 	fastboot_okay("");
 }
+
+#ifdef CONFIG_FASTBOOT_BVB
+void fb_bvb_lock_device(char *response)
+{
+	int ret;
+
+	/* initialize the response buffer */
+	response_str = response;
+	ret = bvb_lock_device();
+	if (ret == BVB_ERR_WRITE_SAME)
+	{
+		printf("already locked\n");
+		fastboot_fail("already locked");
+	} else if (ret) {
+		error("lock device failed\n");
+		fastboot_fail("lock device failed");
+	} else {
+		printf("lock device succeed\n");
+		fastboot_okay("");
+	}
+}
+
+void fb_bvb_unlock_device(char *response)
+{
+	int ret;
+
+	/* initialize the response buffer */
+	response_str = response;
+	ret = bvb_unlock_device();
+	if (ret == BVB_ERR_WRITE_SAME)
+	{
+		printf("already unlocked\n");
+		fastboot_fail("already unlocked");
+	} else if (ret) {
+		error("unlock device failed\n");
+		fastboot_fail("unlock device failed");
+	} else {
+		printf("unlock device succeed\n");
+		fastboot_okay("");
+	}
+}
+#endif
 
 void fb_mmc_flash_write(const char *cmd, void *download_buffer,
 			unsigned int download_bytes, char *response)
@@ -325,6 +370,22 @@ void fb_mmc_flash_write(const char *cmd, void *download_buffer,
 
 		ret = get_partition_info_efi_by_name(dev_desc, cmd, &info);
 		if (ret) {
+#ifdef CONFIG_FASTBOOT_BVB
+			if (!strncmp(cmd, "bvb_devkey", strlen("bvb_devkey"))) {
+				ret = bvb_write_key(download_buffer,download_bytes);
+				if (ret == BVB_ERR_WRITE_SAME) {
+					printf("same bvb_devkey in mmc, no need to flash\n");
+					fastboot_fail("same bvb_devkey on board");
+				} else if (ret) {
+					error("bvb_devkey flash failed\n");
+					fastboot_fail("bvb_devkey write failed");
+				} else {
+					printf("bvb_devkey flashed\n");
+					fastboot_okay("");
+				}
+				return;
+			}
+#endif
 			error("cannot find partition: '%s'\n", cmd);
 			fastboot_fail("cannot find partition");
 			return;
@@ -357,6 +418,19 @@ void fb_mmc_erase(const char *cmd, char *response)
 
 	ret = get_partition_info_efi_by_name(dev_desc, cmd, &info);
 	if (ret) {
+#ifdef CONFIG_FASTBOOT_BVB
+		if (!strncmp(cmd, "bvb_devkey", strlen("bvb_devkey"))) {
+			ret = bvb_erase_key();
+			if (ret) {
+				error("bvb_devkey erase failed\n");
+				fastboot_fail("erase key failed");
+			} else {
+				printf("bvb_devkey erased\n");
+				fastboot_okay("");
+			}
+			return;
+		}
+#endif
 		error("cannot find partition: '%s'\n", cmd);
 		fastboot_fail("cannot find partition");
 		return;

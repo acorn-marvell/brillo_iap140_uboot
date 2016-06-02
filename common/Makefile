@@ -247,4 +247,5 @@ $(obj)fdt_support.o: CFLAGS += $(PLATFORM_NO_UNALIGNED)
 ifdef CONFIG_FASTBOOT_FLASH_MMC_DEV
 obj-y += aboot.o
 obj-y += fb_mmc.o
+obj-$(CONFIG_FASTBOOT_BVB) += mmc_blob.o
 endif

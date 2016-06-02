@@ -19,5 +19,6 @@ obj-$(CONFIG_RAMDUMP) += ramdump_service.o
 obj-$(CONFIG_SQU_DEBUG_SUPPORT) += squ_debug.o
 obj-$(CONFIG_POWER_OFF_CHARGE) += charge.o
 obj-$(CONFIG_PERSIST_DATA) += persistdata.o
+obj-$(CONFIG_FASTBOOT_BVB) += bvb_mmc.o
 
 obj-y += mv_cp.o tim.o
