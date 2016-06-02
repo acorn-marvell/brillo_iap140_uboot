@@ -26,6 +26,11 @@ typedef enum {
 	FB_FLASHING_UNLOCK_DEVICE_OK
 } flashing_state;
 
+/**
+ * get_device_state - get device state
+ *
+ * @device_state: Should be NULL if there's no need to get the state string.
+ */
 device_state get_device_state(char *device_state);
 flashing_state lock_device(void);
 flashing_state unlock_device(void);

@@ -45,7 +45,7 @@ static blob_data *blob_data_new(blob_type type, unsigned char *buf, unsigned int
 
 static void blob_data_delete(blob_data *bd)
 {
-	if (!bd) {
+	if (bd) {
 		free(bd);
 	}
 

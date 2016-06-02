@@ -89,9 +89,10 @@ device_state get_device_state(char *device_state)
 	return FB_FLASHING_DEVICE_LOCKED;
 }
 
-/*
- * flag=1 ==> lock
- * flag=0 ==> unlock
+/**
+ * do_lock_device - do lock the device
+ *
+ * @flag: Lock the device when flag==1 and unlock the device when flag==0.
  */
 static flashing_state do_lock_device(int flag)
 {

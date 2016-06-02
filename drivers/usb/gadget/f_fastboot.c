@@ -943,12 +943,26 @@ static void cb_flashing(struct usb_ep *ep, struct usb_request *req)
 		} else if (state == FB_FLASHING_UNLOCK_DEVICE_FAILED) {
 			snprintf(response, RESPONSE_LEN, "FAIL%s", "unlock failed");
 		}
+	} else if (!strcmp(cmd, "get_unlock_ability")) {
+		state = get_device_state(NULL);
+		if (state == FB_FLASHING_DEVICE_LOCKED) {
+			snprintf(response, RESPONSE_LEN, "INFO%s", "device locked");
+		} else if (state == FB_FLASHING_DEVICE_UNLOCKED) {
+			snprintf(response, RESPONSE_LEN, "INFO%s", "device unlocked");
+		}
 	} else {
 		error("invalid parameter for fastboot flashing command");
 		snprintf(response, RESPONSE_LEN, "FAIL%s", "parameter not supported");
 	}
 
 	fastboot_tx_write_str(response);
+
+	udelay(200 * 1000);
+
+	if (!strcmp(cmd, "get_unlock_ability")) {
+		strcpy(response, "OKAY");
+		fastboot_tx_write_str(response);
+	}
 
 	return;
 }
