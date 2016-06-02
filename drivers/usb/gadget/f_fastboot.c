@@ -32,6 +32,7 @@
 #endif
 
 #include <fb_flashing.h>
+#include <fs.h>
 
 #define FASTBOOT_VERSION		"0.4"
 
@@ -450,22 +451,47 @@ static int strcmp_l1(const char *s1, const char *s2)
 	return strncmp(s1, s2, strlen(s1));
 }
 
-static void var_partition_type(const char *part, char *response)
+static void var_partition_type(const char *part_name, char *response)
 {
 	block_dev_desc_t *dev = get_dev("mmc", CONFIG_FASTBOOT_FLASH_MMC_DEV);
 	disk_partition_t info;
+	int pnum, part, i;
+	char dev_part[64] = {0};
 
 	if (!dev) {
 		strcpy(response, "FAILfailed to read mmc");
 		return;
 	}
 
-	if (get_partition_info_efi_by_name(dev, part, &info)) {
+	pnum = get_partition_num(dev);
+	for (i = 1; i <= pnum; ++i) {
+		if (get_partition_info(dev, i, &info) == 0) {
+			if (!strcmp(info.name, part_name)) {
+				part = i;
+				break;
+			}
+		}
+	}
+
+
+	if (i == pnum + 1) {
 		strcpy(response, "FAILpartition not found");
 		return;
 	}
 
-	snprintf(response, RESPONSE_LEN, "OKAY%s", info.type);
+	sprintf(dev_part, "%d:%x", CONFIG_FASTBOOT_FLASH_MMC_DEV, part);
+	const char *argv[] = {"fstype", "mmc", dev_part, "partition-type"};
+	/* clear the env before acquire the fs type */
+	setenv("partition-type", NULL);
+	do_fs_type(NULL, 0, sizeof(argv) / sizeof(argv[0]), argv);
+
+	if (getenv("partition-type")) {
+		snprintf(response, RESPONSE_LEN, "OKAY%s", getenv("partition-type"));
+	} else {
+		strcpy(response, "FAILpartition format not recognized");
+	}
+
+	return;
 }
 
 static void var_partition_size(const char *part, char *response)
@@ -923,6 +949,7 @@ static void cb_flashing(struct usb_ep *ep, struct usb_request *req)
 	}
 
 	fastboot_tx_write_str(response);
+
 	return;
 }
 
