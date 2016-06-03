@@ -23,6 +23,9 @@
 #ifdef CONFIG_FASTBOOT_FLASH_MMC_DEV
 #include <fb_mmc.h>
 #endif
+#ifdef CONFIG_FASTBOOT_BVB
+#include <bvb_mmc.h>
+#endif
 #ifdef CONFIG_MRVL_BOOT
 #include <mv_boot.h>
 #endif
@@ -912,10 +915,12 @@ static int mkbootimg(void *kernel)
 }
 #endif
 
+#ifdef CONFIG_FASTBOOT_BVB
 static void cb_flashing(struct usb_ep *ep, struct usb_request *req)
 {
 	char *cmd = req->buf;
 	char response[RESPONSE_LEN];
+#if 1
 	flashing_state state;
 
 	strsep(&cmd, " ");
@@ -966,6 +971,30 @@ static void cb_flashing(struct usb_ep *ep, struct usb_request *req)
 
 	return;
 }
+#else
+	strcpy(response, "OKAY");
+
+	strsep(&cmd, " ");
+	if (!cmd) {
+		error("missing flashing action\n");
+		fastboot_tx_write_str("FAILmissing flashing action");
+		return;
+	}
+
+	if (!strcmp_l1(cmd, "lock")) {
+		fb_bvb_lock_device(response);
+	} else if (!strcmp_l1(cmd, "unlock")) {
+		fb_bvb_unlock_device(response);
+	} else {
+		error("unknown flashing action\n");
+		fastboot_tx_write_str("FAILunknown flashing action");
+		return;
+	}
+
+	fastboot_tx_write_str(response);
+}
+#endif
+#endif
 
 static void cb_flash(struct usb_ep *ep, struct usb_request *req)
 {
@@ -980,12 +1009,22 @@ static void cb_flash(struct usb_ep *ep, struct usb_request *req)
 		return;
 	}
 
+#ifdef CONFIG_FASTBOOT_BVB
+#if 1
 	state = get_device_state(NULL);
 	if (state == FB_FLASHING_DEVICE_LOCKED) {
 		error("device locked\n");
 		fastboot_tx_write_str("FAILdevice locked");
 		return;
 	}
+#else
+	if (bvb_check_device_lock()) {
+		error("device locked\n");
+		fastboot_tx_write_str("FAILflash failed, device is locked");
+		return;
+	}
+#endif
+#endif
 
 	//strcpy(response, "FAILno flash device defined");
 #ifdef CONFIG_FASTBOOT_FLASH_MMC_DEV
@@ -1059,10 +1098,12 @@ static const struct cmd_dispatch_info cmd_dispatch_info[] = {
 	},
 #endif
 #ifdef CONFIG_FASTBOOT_FLASH
+#ifdef CONFIG_FASTBOOT_BVB
 	{
 		.cmd = "flashing",
 		.cb = cb_flashing,
 	},
+#endif
 	{
 		.cmd = "flash",
 		.cb = cb_flash,
