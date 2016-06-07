@@ -20,6 +20,7 @@ obj-$(CONFIG_SQU_DEBUG_SUPPORT) += squ_debug.o
 obj-$(CONFIG_POWER_OFF_CHARGE) += charge.o
 obj-$(CONFIG_PERSIST_DATA) += persistdata.o
 obj-$(CONFIG_FASTBOOT_BVB) += bvb_mmc.o
+obj-$(CONFIG_MV_BVB) += mv_bvb.o bvb/
 
 obj-y += mv_cp.o tim.o
 obj-y += blob.o fb_flashing.o

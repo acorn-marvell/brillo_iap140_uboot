@@ -1523,4 +1523,60 @@ int mmc_boot_part_access(struct mmc *mmc, u8 ack, u8 part_num, u8 access)
 	}
 	return 0;
 }
+
+int mmc_boot_power_on_write_protect_set(struct mmc *mmc)
+{
+	int err;
+	u8 boot_wp;
+	ALLOC_CACHE_ALIGN_BUFFER(u8, ext_csd, MMC_MAX_BLOCK_LEN);
+	u8 value = 0;
+
+	/* Set boot partition write protection */
+	value |= EXT_CSD_BOOT_WP_PWR_WP_EN;
+	err =  mmc_switch(mmc, EXT_CSD_CMD_SET_NORMAL, EXT_CSD_BOOT_WP, value);
+	if (err) {
+		debug("%s: mmc switch command error\n", __func__);
+		return err;
+	}
+
+	err = mmc_send_ext_csd(mmc, ext_csd);
+	if (err)
+		return err;
+
+	boot_wp = ext_csd[EXT_CSD_BOOT_WP];
+	if (!(boot_wp & EXT_CSD_BOOT_WP_PWR_WP_EN)) {
+		if (boot_wp & EXT_CSD_BOOT_WP_PWR_WP_DIS) {
+			debug("%s: Boot partition power-on protect disabled\n", __func__);
+			return -1;
+		} else {
+			debug("%s: Failed to enable boot partition "
+				"power-on write protect\n", __func__);
+			return -1;
+		}
+	}
+
+	return 0;
+}
+
+int mmc_boot_power_on_write_protect_get(struct mmc *mmc)
+{
+	int err;
+	u8 boot_wp;
+	ALLOC_CACHE_ALIGN_BUFFER(u8, ext_csd, MMC_MAX_BLOCK_LEN);
+
+	err = mmc_send_ext_csd(mmc, ext_csd);
+	if (err)
+		return err;
+
+	boot_wp = ext_csd[EXT_CSD_BOOT_WP];
+	if (boot_wp & EXT_CSD_BOOT_WP_PWR_WP_EN) {
+		debug("%s: Boot partition power-on protect enabled\n", __func__);
+		return 1;
+	} else {
+		debug("%s: Boot partition power-on protect disabled\n", __func__);
+		return 0;
+	}
+
+	return 0;
+}
 #endif

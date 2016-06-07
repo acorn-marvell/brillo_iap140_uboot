@@ -18,6 +18,9 @@
 #include <android_image.h>
 #include <image.h>
 #include "bootctrl.h"
+#include <mv_bvb.h>
+#include <fb_flashing.h>
+#include <bvb_mmc.h>
 
 static unsigned char load_op;
 struct recovery_reg_funcs *p_recovery_reg_funcs;
@@ -76,7 +79,7 @@ static int get_recovery_flag(void)
 		recovery_valid = params->recovery.validation_status;
 	}
 #endif
-	
+
 	return recovery(primary_valid, recovery_valid,
 			magic_key, p_recovery_reg_funcs);
 }
@@ -192,9 +195,18 @@ int do_mrvlboot(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 #ifdef CONFIG_MULTIPLE_SLOTS
 	int slot;
 #endif
-        block_dev_desc_t *dev;
-        disk_partition_t info;
-        unsigned long recovery_image_addr;
+	block_dev_desc_t *dev;
+	disk_partition_t info;
+	unsigned long recovery_image_addr;
+#ifdef CONFIG_MV_BVB
+	const uint8_t *out_key_data;
+	size_t out_key_length;
+	BvbVerifyResult bvb_result;
+	struct BvbBootImageHeader *bhdr;
+	unsigned long bvb_load_addr;
+	char bvb_cmdline[BVB_KERNEL_CMDLINE_MAX_LEN] = {0};
+	unsigned int device_state;
+#endif
 
 	/* The bootimg/recoveryimg header + uImage header ddr parse address */
 	struct andr_img_hdr *ahdr =
@@ -208,7 +220,7 @@ int do_mrvlboot(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
                 printf("Failed to get mmc device!\n");
                 return -1;
         }
-        /*Parse flash address from the partition name*/ 
+        /*Parse flash address from the partition name*/
         if (get_partition_info_efi_by_name(dev, "recovery", &info)){
                 printf("Failed to get partition(recovery) info!\n");
                 return -1;
@@ -228,17 +240,96 @@ int do_mrvlboot(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 		recovery_flag = 1;
 
 	base_emmc_addr = recovery_flag ? recovery_image_addr :
-							bootctrl_get_boot_addr(slot);
+			bootctrl_get_boot_addr(slot);
 #else
-        if(get_partition_info_efi_by_name(dev, "boot", &info)){
-                printf("Failed to get partition(boot) info!\n");
-                return -1;
-        }
-        unsigned long boot_image_addr = info.start * dev->blksz;
+	if (get_partition_info_efi_by_name(dev, "boot", &info)) {
+		printf("Failed to get partition(boot) info!\n");
+		return -1;
+	}
+	unsigned long boot_image_addr = info.start * dev->blksz;
 
 	base_emmc_addr = recovery_flag ? recovery_image_addr : boot_image_addr;
 #endif
 
+#ifdef CONFIG_MV_BVB
+	bhdr = (struct BvbBootImageHeader *)malloc(sizeof(*bhdr));
+	if (!bhdr) {
+		printf("BVB: ERROR, Malloc for bvb header failed\n");
+		return -1;
+	}
+
+	/* Load the header and the whole image */
+	printf("Booting from BVB %s image\n", recovery_flag ? "recovery" : "boot");
+
+	mv_bvb_load_header(bhdr, base_emmc_addr);
+	if (memcmp(bhdr->magic, BVB_MAGIC, BVB_MAGIC_LEN) != 0) {
+		printf("BVB: ERROR, Header Magic is incorrect.\n");
+		// TODO set current slot not bootable
+		free(bhdr);
+		return -1;
+	}
+	bvb_load_addr = CONFIG_LOADADDR - mv_bvb_image_size(bhdr) - 0x200;
+	mv_bvb_load_image(bvb_load_addr, base_emmc_addr, mv_bvb_image_size(bhdr));
+
+	/* Verify the image */
+	if (FB_FLASHING_DEVICE_LOCKED == (device_state = get_device_state(NULL))) {
+		bvb_result = mv_bvb_verify(bvb_load_addr,
+					   mv_bvb_image_size(bhdr),
+					   &out_key_data, &out_key_length);
+		if (!bvb_result && out_key_data) {
+			bvb_debug("BVB: Verified successful, then compare the out key\n");
+			if (!bvb_devkey_match(out_key_data, out_key_length)) {
+				bvb_debug("BVB: DEVKEY is equal to the embedding KEY\n");
+			} else {
+				bvb_debug("BVB: ERROR, DEVKEY is not equal to the "
+						"embedding KEY\n");
+				if (FB_FLASHING_DEVICE_LOCKED == device_state) {
+					free(bhdr);
+					return -1;
+				}
+			}
+		} else {
+			switch (bvb_result) {
+				case BVB_VERIFY_RESULT_OK_NOT_SIGNED:
+					printf("BVB: WARNING, image is not signed\n");
+					break;
+				case BVB_VERIFY_RESULT_INVALID_BOOT_IMAGE_HEADER:
+					printf("BVB: ERROR, verified failed, "
+						"invalid Boot image header\n");
+					break;
+				case BVB_VERIFY_RESULT_HASH_MISMATCH:
+					printf("BVB: ERROR, verified failed, hash mismatch\n");
+					break;
+				case BVB_VERIFY_RESULT_SIGNATURE_MISMATCH:
+					printf("BVB: ERROR, verified failed, signature mismatch\n");
+					break;
+				default:
+					printf("BVB: ERROR, verified failed, unknown error\n");
+			}
+
+			if (bvb_result > BVB_VERIFY_RESULT_OK_NOT_SIGNED) {
+				printf("BVB: ERROR, stop booting\n");
+				free(bhdr);
+				return -1;
+			}
+		}
+	}
+
+	/* Load the kernel and the ramdisk */
+	kernel_load_addr = bvb_load_addr + BVB_BOOT_IMAGE_HEADER_SIZE +
+				bhdr->authentication_data_block_size +
+				bhdr->auxilary_data_block_size;
+	kernel_size = ALIGN(bhdr->kernel_size, 512);
+	memcpy(CONFIG_LOADADDR, kernel_load_addr, kernel_size);
+
+	ramdisk_load_addr = RAMDISK_LOADADDR;
+	ramdisk_size = ALIGN(bhdr->initrd_size, 512);
+	memcpy(ramdisk_load_addr, kernel_load_addr + bhdr->initrd_offset,
+		   ramdisk_size);
+
+	kernel_load_addr = CONFIG_LOADADDR;
+
+#else
 	load_image_head(ahdr, base_emmc_addr);
 
 	if (!memcmp(ANDR_BOOT_MAGIC, ahdr->magic, ANDR_BOOT_MAGIC_SIZE)) {
@@ -249,6 +340,7 @@ int do_mrvlboot(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 		ramdisk_offset = kernel_offset + kernel_size;
 		ramdisk_size = ALIGN(ahdr->ramdisk_size, ahdr->page_size);
 	}
+
 	/* calculate mmc block number */
 	kernel_offset /= dev->blksz;
 	ramdisk_offset /= dev->blksz;
@@ -272,7 +364,7 @@ int do_mrvlboot(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 			base_emmc_addr / 512 + ramdisk_offset, ramdisk_size);
 		run_command(cmd, 0);
 	}
-
+#endif
 	/* Modify ramdisk command line */
 	bootargs = getenv("bootargs");
 	strncpy(cmdline, bootargs, COMMAND_LINE_SIZE);
@@ -284,12 +376,28 @@ int do_mrvlboot(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 		sprintf(cmdline + strlen(cmdline), " recovery=1");
 
 #ifdef CONFIG_MULTIPLE_SLOTS
-	if(slot >= 0)
+	if (slot >= 0)
 		sprintf(cmdline + strlen(cmdline), " androidboot.slot_suffix=%s",
 				bootctrl_get_boot_slot_suffix(slot));
 #endif
 
+#ifdef CONFIG_MV_BVB
+	/* Append the options to command line */
+	memcpy(bvb_cmdline, cmdline, strlen(cmdline));
+	// TODO Append PARTUUID, HASH, and salt
+	/*
+	sprintf(bvb_cmdline + strlen(bvb_cmdline),
+			" androidboot.secure=1 dm=\"1 vroot none ro 1,0 158136 " \
+			"verity 1"
+			"PARTUUID=$(ANDROID_SYSTEM_PARTUUID) PARTUUID=$(ANDROID_SYSTEM_PARTUUID) " \
+			"4096 4096 19767 19767 sha1 " \
+			"3b97752913fd33ab924e4385ffe249bf32c1d2b2 " \
+			"5f96c19a519c01a9aa881c43044fe8a9e9b967be\"");
+	*/
+	setenv("bootargs", bvb_cmdline);
+#else
 	setenv("bootargs", cmdline);
+#endif
 
 #ifdef CONFIG_OF_LIBFDT
 	/* Load DTB */
@@ -309,9 +417,9 @@ int do_mrvlboot(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 			dtb_load_addr, kernel_load_addr, dtb_load_addr);
 	} else
 #endif
-//#if !defined(CONFIG_CMD_BOOTZ) || defined(CONFIG_OF_LIBFDT)
+/* #if !defined(CONFIG_CMD_BOOTZ) || defined(CONFIG_OF_LIBFDT) */
 #ifndef CONFIG_BOOTZIMAGE
- 		sprintf(cmd, "bootm 0x%lx", kernel_load_addr);
+		sprintf(cmd, "bootm 0x%lx", kernel_load_addr);
 #else
 		/* zImage-dtb option */
 		sprintf(cmd, "bootz 0x%lx", kernel_load_addr);
@@ -325,6 +433,15 @@ int do_mrvlboot(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 	} else
 		printf("mrvlboot, normal mode\n");
 
+#ifdef CONFIG_MV_BVB
+	/* Enable power-on write protection when the device is LOCKED */
+	if (FB_FLASHING_DEVICE_LOCKED == device_state) {
+		bvb_debug("BVB: Enable PWR write protect\n");
+		mv_bvb_power_on_wp_set(CONFIG_FASTBOOT_FLASH_MMC_DEV);
+	}
+	free(bhdr);
+	bhdr = NULL;
+#endif
 	run_command(cmd, 0);
 
 	return 0;

@@ -151,6 +151,13 @@ int bvb_write_key(u_char *buf, u_int len)
 		goto err_out;
 	}
 
+#ifdef CONFIG_MV_BVB
+	if (mv_bvb_power_on_wp_get(desc.mmc_dev)) {
+		ret = BVB_ERR;
+		goto err_out;
+	}
+#endif
+
 	ret = mmc_blob_oper(&desc, key_to_write, MMC_BLOB_WRITE);
 
 err_out:

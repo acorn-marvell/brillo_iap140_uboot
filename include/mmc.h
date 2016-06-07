@@ -151,6 +151,7 @@
 #define EXT_CSD_PARTITIONS_ATTRIBUTE	156	/* R/W */
 #define EXT_CSD_PARTITIONING_SUPPORT	160	/* RO */
 #define EXT_CSD_RPMB_MULT		168	/* RO */
+#define EXT_CSD_BOOT_WP			173	/* R/W */
 #define EXT_CSD_ERASE_GROUP_DEF		175	/* R/W */
 #define EXT_CSD_BOOT_BUS_WIDTH		177
 #define EXT_CSD_PART_CONF		179	/* R/W */
@@ -187,6 +188,8 @@
 #define EXT_CSD_BOOT_PART_NUM(x)	(x << 3)
 #define EXT_CSD_PARTITION_ACCESS(x)	(x << 0)
 
+#define EXT_CSD_BOOT_WP_PWR_WP_EN	(1 << 0)
+#define EXT_CSD_BOOT_WP_PWR_WP_DIS	(1 << 6)
 
 #define R1_ILLEGAL_COMMAND		(1 << 22)
 #define R1_APP_CMD			(1 << 5)
@@ -327,6 +330,9 @@ int mmc_boot_partition_size_change(struct mmc *mmc, unsigned long bootsize,
 					unsigned long rpmbsize);
 /* Function to send commands to open/close the specified boot partition */
 int mmc_boot_part_access(struct mmc *mmc, u8 ack, u8 part_num, u8 access);
+
+int mmc_boot_power_on_write_protect_set(struct mmc *mmc);
+int mmc_boot_power_on_write_protect_get(struct mmc *mmc);
 
 /**
  * Start device initialization and return immediately; it does not block on

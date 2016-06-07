@@ -449,7 +449,6 @@ int bootctrl_find_boot_slot()
 
 	if(slot>=0){
 		bootctrl_set_metadata();
-		printf("Booting from slot %d\n", slot);
 	}
 	
 	return slot;

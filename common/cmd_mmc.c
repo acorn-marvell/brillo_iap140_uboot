@@ -338,6 +338,32 @@ static int do_mmcops(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 			printf("EMMC boot partition Size change Failed.\n");
 			return 1;
 		}
+	} else if (strcmp(argv[1], "bootwp") == 0) {
+		struct mmc *mmc;
+		int err;
+
+		if (argc != 2)
+			return CMD_RET_USAGE;
+
+		mmc = find_mmc_device(curr_device);
+		if (!mmc) {
+			printf("No mmc device at slot %x\n", curr_device);
+			return 1;
+		}
+
+		if (mmc_init(mmc)) {
+			printf("Unable to initialize mmc\n");
+			return 1;
+		}
+
+		err = mmc_boot_power_on_write_protect_set(mmc);
+		if (err) {
+			printf("Error %d applying write protect\n", err);
+			return 1;
+		} else {
+			printf("BOOT partition Power-on write protect enable\n");
+			return 0;
+		}
 #endif /* CONFIG_SUPPORT_EMMC_BOOT */
 	}
 
@@ -444,6 +470,8 @@ U_BOOT_CMD(
 	" - Enable boot_part for booting and disable access to boot_part\n"
 	"mmc bootpart <device num> <boot part size MB> <RPMB part size MB>\n"
 	" - change sizes of boot and RPMB partitions of specified device\n"
+	"mmc bootwp\n"
+	" - apply write protection to eMMC boot partitions\n"
 #endif
 	"mmc setdsr - set DSR register value\n"
 	);
