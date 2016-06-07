@@ -82,7 +82,7 @@ int blob_write(unsigned int offset, blob_type type, unsigned char *buf, unsigned
 	return BLOB_OK;
 }
 
-int blob_read(unsigned int offset, unsigned char **buf, unsigned int *len)
+int blob_read(unsigned int offset, unsigned char *buf, unsigned int *len)
 {
 	char tmpbuf[MMC_BLOCK_SIZE] = {0};
 	unsigned int total_size = 0;
@@ -104,7 +104,7 @@ int blob_read(unsigned int offset, unsigned char **buf, unsigned int *len)
 
 	total_size = sizeof(blob_data) + bd->length;
 	dev_desc->block_read(dev_desc->dev, offset / dev_desc->blksz,
-		BLOCK_CNT(total_size, dev_desc), *buf);
+		BLOCK_CNT(total_size, dev_desc), buf);
 	*len = total_size;
 
 	mmc_switch_part(MMC_DEV_BLOB, MMC_PART_USER);

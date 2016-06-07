@@ -30,6 +30,6 @@ typedef struct _blob_data {
 } blob_data;
 
 int blob_write(unsigned int offset, blob_type type, unsigned char *buf, unsigned int len);
-int blob_read(unsigned int offset, unsigned char **buf, unsigned int *len);
+int blob_read(unsigned int offset, unsigned char *buf, unsigned int *len);
 
 #endif

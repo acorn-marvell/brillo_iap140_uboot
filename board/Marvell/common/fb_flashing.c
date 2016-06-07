@@ -15,7 +15,7 @@
 #include <fb_flashing.h>
 
 #define LOCK_MMC_OFFSET 0x200000
-#define LOCK_MMC_SIZE 0x100000
+#define MMC_BLOCK_SIZE 512
 
 #define LOCK_STATE "locked"
 #define UNLOCK_STATE "unlocked"
@@ -62,10 +62,10 @@ static void assert_user_here()
 /* All failed cases will LOCK the device */
 device_state get_device_state(char *device_state)
 {
-	unsigned char *loadaddr = CONFIG_LOADADDR - LOCK_MMC_SIZE;
+	unsigned char loadaddr[MMC_BLOCK_SIZE] = {0};
 	unsigned int total_len = 0;
 	int ret = BLOB_OK;
-	ret = blob_read(LOCK_MMC_OFFSET, &loadaddr, &total_len);
+	ret = blob_read(LOCK_MMC_OFFSET, loadaddr, &total_len);
 	if (ret == BLOB_FAIL) {
 		printf("%s: blob_read failed\n", __func__);
 		return FB_FLASHING_DEVICE_LOCKED;
