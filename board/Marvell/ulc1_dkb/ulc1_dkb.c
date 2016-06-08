@@ -938,17 +938,16 @@ void mmc_decode_cid(struct mmc *card, struct mmc_cid *cid)
 	printf("month:%x\n", cid->month);
 #endif
 
-	
 }
 
 int emmc_get_board_sn_from_cid(char *data)
 {
 	struct mmc_cid cid;
-	
+
 	struct mmc *card = find_mmc_device(CONFIG_FASTBOOT_FLASH_MMC_DEV);
-	if (!card ){
+	if (!card ) {
 		return -1;
-	}else{
+	} else {
 		mmc_decode_cid(card, &cid);
 	}
 
@@ -1121,8 +1120,7 @@ int misc_init_r(void)
 #endif
 
 	/* allocate 1 byte more to store the last '0' */
-	board_sn = malloc(EEPROM_BOARD_SN_LEN + 1);
-	board_sn[0] = 0;
+	board_sn = calloc(EEPROM_BOARD_SN_LEN + 1, 1);
 	char board_wifi_mac[18] = {0};
 	char board_bluetooth_mac[18] = {0};
 	char board_zigbee_mac[24] = {0};
