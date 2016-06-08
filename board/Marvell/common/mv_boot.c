@@ -181,7 +181,7 @@ void image_flash_notify(unsigned long load_addr)
 int do_mrvlboot(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 {
 	char cmd[128];
-	char cmdline[COMMAND_LINE_SIZE];
+	char cmdline[COMMAND_LINE_SIZE] = {0};
 	char *bootargs;
 	unsigned int kernel_offset = 0, ramdisk_offset = KERNEL_SIZE;
 	unsigned int kernel_size = KERNEL_SIZE, ramdisk_size = RAMDISK_SIZE;
@@ -369,24 +369,26 @@ int do_mrvlboot(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 	bootargs = getenv("bootargs");
 	strncpy(cmdline, bootargs, COMMAND_LINE_SIZE);
 	remove_cmdline_param(cmdline, "initrd=");
-	sprintf(cmdline + strlen(cmdline),  " initrd=0x%lx,10m rw",
-		ramdisk_load_addr);
+	snprintf(cmdline + strlen(cmdline), sizeof(cmdline) - strlen(cmdline),
+			" initrd=0x%lx,10m rw", ramdisk_load_addr);
 
 	if (recovery_flag)
-		sprintf(cmdline + strlen(cmdline), " recovery=1");
+		snprintf(cmdline + strlen(cmdline), sizeof(cmdline) - strlen(cmdline),
+				" recovery=1");
 
 #ifdef CONFIG_MULTIPLE_SLOTS
 	if (slot >= 0)
-		sprintf(cmdline + strlen(cmdline), " androidboot.slot_suffix=%s",
+		snprintf(cmdline + strlen(cmdline), sizeof(cmdline) - strlen(cmdline),
+				" androidboot.slot_suffix=%s",
 				bootctrl_get_boot_slot_suffix(slot));
 #endif
 
 #ifdef CONFIG_MV_BVB
 	/* Append the options to command line */
-	memcpy(bvb_cmdline, cmdline, strlen(cmdline));
+	strncpy(bvb_cmdline, cmdline, COMMAND_LINE_SIZE);
 	// TODO Append PARTUUID, HASH, and salt
 	/*
-	sprintf(bvb_cmdline + strlen(bvb_cmdline),
+	snprintf(bvb_cmdline + strlen(bvb_cmdline), sizeof(bvb_cmdline),
 			" androidboot.secure=1 dm=\"1 vroot none ro 1,0 158136 " \
 			"verity 1"
 			"PARTUUID=$(ANDROID_SYSTEM_PARTUUID) PARTUUID=$(ANDROID_SYSTEM_PARTUUID) " \
@@ -419,10 +421,10 @@ int do_mrvlboot(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 #endif
 /* #if !defined(CONFIG_CMD_BOOTZ) || defined(CONFIG_OF_LIBFDT) */
 #ifndef CONFIG_BOOTZIMAGE
-		sprintf(cmd, "bootm 0x%lx", kernel_load_addr);
+		snprintf(cmd, sizeof(cmd), "bootm 0x%lx", kernel_load_addr);
 #else
 		/* zImage-dtb option */
-		sprintf(cmd, "bootz 0x%lx", kernel_load_addr);
+		snprintf(cmd, sizeof(cmd), "bootz 0x%lx", kernel_load_addr);
 #endif
 
 	if (fastboot_flag) {
