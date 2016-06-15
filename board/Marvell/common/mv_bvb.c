@@ -32,7 +32,7 @@ void mv_bvb_key_dump(uint8_t *out_key_data, size_t out_key_length)
 static void header_dump(struct BvbBootImageHeader *bhdr)
 {
 	printf("\n===== BvBHeader Dump ===== \n");
-	printf("BvBHeader: magic %s\n", bhdr->magic);
+	printf("BvBHeader: magic %.4s\n", bhdr->magic);
 	printf("BvBHeader: version %d:%d\n",
 			bhdr->header_version_major, bhdr->header_version_minor);
 	printf("BvBHeader: authentication_data_block_size %d\n",
