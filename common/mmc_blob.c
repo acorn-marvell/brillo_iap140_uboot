@@ -106,11 +106,6 @@ int mmc_blob_oper(mmc_blob_desc_t *desc, mmc_blob_data_t *bdata,
 				total_size = sizeof(mmc_blob_data_t);
 				buf = (u_char*)bdata;
 				if (!desc->magic) {
-					if (desc->magic != bdata->magic) {
-						printf("Invalid magic in blob reading");
-						ret = -1;
-						goto err_in_mmc;
-					}
 					buf += sizeof(bdata->magic);
 					total_size -= sizeof(bdata->magic);
 				}
@@ -123,6 +118,12 @@ int mmc_blob_oper(mmc_blob_desc_t *desc, mmc_blob_data_t *bdata,
 						"Read(header)");
 				if (blks != blkcnt) {
 					printf("%s: Read failed " LBAFU "\n",__func__, blks);
+					ret = -1;
+					goto err_in_mmc;
+				}
+
+				if (desc->magic && desc->magic != bdata->magic) {
+					printf("Invalid magic in blob reading\n");
 					ret = -1;
 					goto err_in_mmc;
 				}
