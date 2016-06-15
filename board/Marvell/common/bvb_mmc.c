@@ -14,27 +14,27 @@
 #include <part.h>
 #include <bvb_mmc.h>
 
-#define BVB_MMC_OFFSET					0x200000
+#define BVB_MMC_OFFSET 0x200000
 
 /* device state blob */
-#define BVB_MMC_DEVICE_STATE_OFFSET		BVB_MMC_OFFSET
-#define BVB_MMC_DEVICE_STATE_MAXSIZE	0x200
-#define BVB_MMC_DEVICE_STATE_MAGIC		0x19080001
+#define BVB_MMC_DEVICE_STATE_OFFSET     BVB_MMC_OFFSET
+#define BVB_MMC_DEVICE_STATE_MAXSIZE    0x200
+#define BVB_MMC_DEVICE_STATE_MAGIC      0x19080001
 
-/* nvram index blob */
-#define BVB_MMC_NVRAM_INDEX_OFFSET		\
+/* nvram rollback_index blob */
+#define BVB_MMC_ROLLBACK_INDEX_OFFSET   \
 	(BVB_MMC_DEVICE_STATE_OFFSET + BVB_MMC_DEVICE_STATE_MAXSIZE)
-#define BVB_MMC_NVRAM_INDEX_MAXSIZE		0x200
-#define BVB_MMC_NVRAM_INDEX_MAGIC		(BVB_MMC_DEVICE_STATE_MAGIC + 1)
+#define BVB_MMC_ROLLBACK_INDEX_MAXSIZE  0x200
+#define BVB_MMC_ROLLBACK_INDEX_MAGIC    (BVB_MMC_DEVICE_STATE_MAGIC + 1)
 
 /* devkey blob */
-#define BVB_MMC_DEVKEY_OFFSET			\
-	(BVB_MMC_NVRAM_INDEX_OFFSET + BVB_MMC_NVRAM_INDEX_MAXSIZE)
-#define BVB_MMC_DEVKEY_MAXSIZE			0x1000
-#define BVB_MMC_DEVKEY_MAGIC			(BVB_MMC_NVRAM_INDEX_MAGIC + 1)
+#define BVB_MMC_DEVKEY_OFFSET           \
+	(BVB_MMC_ROLLBACK_INDEX_OFFSET + BVB_MMC_ROLLBACK_INDEX_MAXSIZE)
+#define BVB_MMC_DEVKEY_MAXSIZE          0x1000
+#define BVB_MMC_DEVKEY_MAGIC            (BVB_MMC_ROLLBACK_INDEX_MAGIC + 1)
 
-#define BVB_STR_LOCKED					"locked"
-#define BVB_STR_UNLOCKED				"unlocked"
+#define BVB_STR_LOCKED                  "locked"
+#define BVB_STR_UNLOCKED                "unlocked"
 
 
 static void bvb_blob_desc_init(mmc_blob_desc_t *desc, u_int offset,
@@ -42,6 +42,56 @@ static void bvb_blob_desc_init(mmc_blob_desc_t *desc, u_int offset,
 {
 	mmc_blob_desc_init(desc, MMC_DEV, MMC_BOOT0, offset,
 						max_size, magic, BLOB_TYPE_HEADER);
+}
+
+int bvb_write_rollback_index(u_int index)
+{
+	mmc_blob_desc_t desc;
+	mmc_blob_data_t *bdata;
+	int ret = BVB_OK;
+
+	bvb_blob_desc_init(&desc, BVB_MMC_ROLLBACK_INDEX_OFFSET,
+			BVB_MMC_ROLLBACK_INDEX_MAXSIZE, BVB_MMC_ROLLBACK_INDEX_MAGIC);
+	bdata = mmc_blob_data_new((u_char*)&index, sizeof(index));
+	if (!bdata) {
+		ret = BVB_ERR;
+		goto out;
+	}
+
+	ret = mmc_blob_oper(&desc, bdata, MMC_BLOB_WRITE);
+	mmc_blob_data_delete(bdata);
+
+out:
+	return ret;
+}
+
+int bvb_read_rollback_index(u_int *index)
+{
+	mmc_blob_desc_t desc;
+	mmc_blob_data_t *bdata;
+	int ret = BVB_OK;
+
+	bvb_blob_desc_init(&desc, BVB_MMC_ROLLBACK_INDEX_OFFSET,
+			BVB_MMC_ROLLBACK_INDEX_MAXSIZE, BVB_MMC_ROLLBACK_INDEX_MAGIC);
+	bdata = mmc_blob_data_new(NULL, desc.max_size);
+	if (!bdata) {
+		ret = BVB_ERR;
+		goto out;
+	}
+
+	ret = mmc_blob_oper(&desc, bdata, MMC_BLOB_READ);
+	if (ret) {
+		ret = BVB_ERR;
+		goto err_out;
+	}
+
+	*index = *((u_int *)bdata->data);
+
+err_out:
+	mmc_blob_data_delete(bdata);
+
+out:
+	return ret;
 }
 
 static int bvb_write_device_state(int state, int check_state)

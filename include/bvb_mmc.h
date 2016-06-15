@@ -17,6 +17,21 @@
 #define BVB_CHECK_STATE_YES	1
 #define BVB_CHECK_STATE_NO	0
 
+/**
+ * bvb_read_rollback_index - read NVRAM_minimum_rollback_index from WP eMMC
+ *
+ * @index: output argument for NVRAM_minimum_rollback_index
+ * @return: BVB_OK if success, BVB_ERR if fail
+ */
+int bvb_read_rollback_index(u_int *index);
+
+/**
+ * bvb_write_rollback_index - write NVRAM_minimum_rollback_index to WP eMMC
+ *
+ * @index: input argument for NVRAM_minimum_rollback_index
+ * @return: BVB_OK if success, BVB_ERR if fail
+ */
+int bvb_write_rollback_index(u_int index);
 
 /* device lock state */
 int bvb_check_device_lock(void);
