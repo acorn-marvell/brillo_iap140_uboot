@@ -115,6 +115,9 @@ char bootslot_suffix_only[SLOTS_NUM][3] = { SLOT_A,  SLOT_B};
 /* partition that supports slot, use "" as identifier of end of the array */
 char partition_slot[][8] = {"boot", "system", ""}; 
 
+char bootslot_system[SLOTS_NUM][16] = {"system" SLOT_HYPHEN SLOT_A,
+		"system" SLOT_HYPHEN SLOT_B};
+
 static int bootctrl_get_metadata(void)
 {
 	block_dev_desc_t *dev_desc;
@@ -269,6 +272,14 @@ char* bootctrl_get_boot_slot_suffix_only(int slot)
 	if(slot > SLOTS_NUM || slot < 0)
 		return "";
 	return bootslot_suffix_only[slot];
+}
+
+char* bootctrl_get_boot_slot_system(int slot)
+{
+	if (slot > SLOTS_NUM || slot < 0)
+		return "";
+
+	return bootslot_system[slot];
 }
 
 int bootctrl_get_boot_slots_num(void)

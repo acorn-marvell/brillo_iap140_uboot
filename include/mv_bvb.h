@@ -34,6 +34,9 @@ int mv_bvb_power_on_wp_set(int mmc_dev);
 BvbVerifyResult mv_bvb_verify(const uint8_t *data, size_t length,
 		const uint8_t **out_key_data, size_t *out_key_length);
 
+int mv_bvb_append_dm_param(size_t bvb_boot_slot, uint8_t *bvb_cmdline,
+		uint8_t *kernel_cmdline, size_t max_cmdline_size);
+
 static inline unsigned int mv_bvb_image_size(struct BvbBootImageHeader *bhdr)
 {
 	if (bhdr)

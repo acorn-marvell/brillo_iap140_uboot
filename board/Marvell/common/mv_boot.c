@@ -200,11 +200,11 @@ int do_mrvlboot(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 	unsigned long recovery_image_addr;
 #ifdef CONFIG_MV_BVB
 	const uint8_t *out_key_data;
-	size_t out_key_length;
+	unsigned int out_key_length;
 	BvbVerifyResult bvb_result;
 	struct BvbBootImageHeader *bhdr;
 	unsigned long bvb_load_addr;
-	char bvb_cmdline[BVB_KERNEL_CMDLINE_MAX_LEN] = {0};
+	uint8_t bvb_cmdline[BVB_KERNEL_CMDLINE_MAX_LEN] = {0};
 	unsigned int device_state;
 #endif
 
@@ -384,18 +384,12 @@ int do_mrvlboot(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 #endif
 
 #ifdef CONFIG_MV_BVB
-	/* Append the options to command line */
 	strncpy(bvb_cmdline, cmdline, COMMAND_LINE_SIZE);
-	// TODO Append PARTUUID, HASH, and salt
-	/*
-	snprintf(bvb_cmdline + strlen(bvb_cmdline), sizeof(bvb_cmdline),
-			" androidboot.secure=1 dm=\"1 vroot none ro 1,0 158136 " \
-			"verity 1"
-			"PARTUUID=$(ANDROID_SYSTEM_PARTUUID) PARTUUID=$(ANDROID_SYSTEM_PARTUUID) " \
-			"4096 4096 19767 19767 sha1 " \
-			"3b97752913fd33ab924e4385ffe249bf32c1d2b2 " \
-			"5f96c19a519c01a9aa881c43044fe8a9e9b967be\"");
-	*/
+
+	/* Append PARTUUID, HASH, and salt from bvb header */
+	mv_bvb_append_dm_param(slot, bvb_cmdline, bhdr->kernel_cmdline,
+					BVB_KERNEL_CMDLINE_MAX_LEN);
+
 	setenv("bootargs", bvb_cmdline);
 #else
 	setenv("bootargs", cmdline);

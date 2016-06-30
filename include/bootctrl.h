@@ -24,6 +24,7 @@ int bootctrl_set_active_slot(char *slot_suffix, char *response);
 int bootctrl_get_active_slot(void);
 char* bootctrl_get_active_slot_suffix(void);
 int bootctrl_is_partition_support_slot(char *partition);
+char* bootctrl_get_boot_slot_system(int slot);
 
 #endif
 

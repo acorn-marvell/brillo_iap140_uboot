@@ -240,6 +240,8 @@
 #define CONFIG_MV_ETB_REG_ADDR0		0xd410a000
 
 #define CONFIG_SUPPORT_EMMC_BOOT	1
-/* #define CONFIG_MV_BVB			1 */
+#define CONFIG_MV_BVB			1
+#define CONFIG_MV_BVB_DEBUG		1
+#define CONFIG_PARTITION_UUIDS		1
 
 #endif	/* __CONFIG_ULC1_DKB_H */
