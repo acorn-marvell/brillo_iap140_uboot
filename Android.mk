@@ -2,6 +2,7 @@
 
 .PHONY: build-uboot clean-uboot
 
+LOCAL_PATH := $(call my-dir)
 UBOOT_PATH := $(ANDROID_BUILD_TOP)/bootable/brillo_iap140_uboot
 UBOOT_OUTPUT :=  $(abspath $(PRODUCT_OUT)/obj/uboot)
 
@@ -20,14 +21,14 @@ UBOOT_DEFCONFIG ?= ulc1_dkb_config
 PRIVATE_UBOOT_ARGS := -C $(UBOOT_PATH) ARCH=arm CROSS_COMPILE=$(UBOOT_CROSS_COMPILE) \
 	SECURITY_REGION_SIZE_MB=$(SECURITY_REGION_SIZE_MB)
 
-ifneq ($(UBOOT_OUTPUT),)
-PRIVATE_UBOOT_ARGS += O=$(abspath $(UBOOT_OUTPUT))
-endif
+#ifneq ($(UBOOT_OUTPUT),)
+#PRIVATE_UBOOT_ARGS += O=$(abspath $(UBOOT_OUTPUT))
+#endif
 
 # Include uboot in the Android build system
 include $(CLEAR_VARS)
 
-LOCAL_PATH := $(UBOOT_OUTPUT)
+#LOCAL_PATH := $(UBOOT_OUTPUT)
 LOCAL_SRC_FILES := u-boot.bin
 LOCAL_MODULE := $(LOCAL_SRC_FILES)
 LOCAL_MODULE_CLASS := EXECUTABLES
@@ -37,9 +38,9 @@ LOCAL_MODULE_PATH := $(PRODUCT_OUT)
 include $(BUILD_PREBUILT)
 
 build-uboot :
-ifneq ($(UBOOT_OUTPUT),)
-	@mkdir -p $(UBOOT_OUTPUT)
-endif
+#ifneq ($(UBOOT_OUTPUT),)
+#	@mkdir -p $(UBOOT_OUTPUT)
+#endif
 
 ifeq ($(UBOOT_DEFCONFIG),local)
 	@echo Skipping uboot configuration, UBOOT_DEFCONFIG set to local
@@ -52,7 +53,8 @@ ifeq ($(UBOOT_ARCH),arm64)
 build-kernel: build-uboot
 endif
 #droidcore : u-boot.bin
-$(UBOOT_OUTPUT)/u-boot.bin : build-uboot
+#$(UBOOT_OUTPUT)/u-boot.bin : build-uboot
+$(LOCAL_PATH)/u-boot.bin : build-uboot
 
 
 clean clobber : clean-uboot
