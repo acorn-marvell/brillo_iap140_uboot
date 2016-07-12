@@ -15,7 +15,7 @@
 #include <android_image.h>
 #include "bootctrl.h"
 
-#if 0
+#if DEBUG
 void hexDump (char *desc, void *addr, int len) {
     int i;
     unsigned char buff[17];
@@ -106,17 +106,16 @@ typedef struct bootloader_message {
 	char stage[32];
 	char slot_suffix[32];
 	char reserved[192];
-}bootloader_message;
-
+} bootloader_message;
 
 bootloader_message bl_msg[2];
-char bootslot_suffix[SLOTS_NUM][3] = {SLOT_HYPHEN  SLOT_A, SLOT_HYPHEN SLOT_B};
-char bootslot_suffix_only[SLOTS_NUM][3] = { SLOT_A,  SLOT_B};
+char bootslot_suffix[SLOTS_NUM][3] = { SLOT_HYPHEN SLOT_A, SLOT_HYPHEN SLOT_B };
+char bootslot_suffix_only[SLOTS_NUM][3] = { SLOT_A, SLOT_B };
 /* partition that supports slot, use "" as identifier of end of the array */
-char partition_slot[][8] = {"boot", "system", ""}; 
+char partition_slot[][8] = { "boot", "system", "" };
 
-char bootslot_system[SLOTS_NUM][16] = {"system" SLOT_HYPHEN SLOT_A,
-		"system" SLOT_HYPHEN SLOT_B};
+char bootslot_system[SLOTS_NUM][16] = { "system" SLOT_HYPHEN SLOT_A,
+		"system" SLOT_HYPHEN SLOT_B };
 
 static int bootctrl_get_metadata(void)
 {
@@ -143,9 +142,11 @@ static int bootctrl_get_metadata(void)
 	}
 
 	/* save a copy of bl for comparision of bl data change */
-	memcpy(bl_msg+1, bl_msg, sizeof(bootloader_message));
+	memcpy(bl_msg + 1, bl_msg, sizeof(bootloader_message));
 
-	//hexDump("bl_msg", bl_msg, sizeof(bl_msg));
+#ifdef DEBUG
+	hexDump("bl_msg", bl_msg, sizeof(bl_msg));
+#endif
 
 	return 0;
 }
@@ -167,8 +168,9 @@ static int bootctrl_set_metadata(void)
 		return -1;
 	}
 
-	if(memcmp(bl_msg, bl_msg+1, sizeof(bootloader_message))){
-		if (dev_desc->block_write(mmc_dev, part.start, sizeof(bl_msg)/512, bl_msg) != sizeof(bl_msg)/512) {
+	if (memcmp(bl_msg, bl_msg + 1, sizeof(bootloader_message))) {
+		if (dev_desc->block_write(mmc_dev, part.start, sizeof(bl_msg) / 512,
+				bl_msg) != sizeof(bl_msg) / 512) {
 			printf("bootctrl: block read from misc failed\n");
 			return -1;
 		}
@@ -181,12 +183,12 @@ static int bootctrl_set_metadata(void)
 static int bootctrl_kernel_signature_verify(int slot)
 {
 	char cmd[128];
-	struct andr_img_hdr *ahdr =
-		(struct andr_img_hdr *)(CONFIG_LOADADDR - 0x1000 - 0x200);
+	struct andr_img_hdr *ahdr = (struct andr_img_hdr *) (CONFIG_LOADADDR
+					- 0x1000 - 0x200);
 
 	/* copy boot image and uImage header to parse */
-	sprintf(cmd, "%s; mmc read %p %lx 0x9", CONFIG_MMC_BOOT_DEV, \
-			ahdr, bootctrl_get_boot_addr(slot) / 512);
+	sprintf(cmd, "%s; mmc read %p %lx 0x9", CONFIG_MMC_BOOT_DEV, ahdr,
+			bootctrl_get_boot_addr(slot) / 512);
 	run_command(cmd, 0);
 
 	if (!memcmp(ANDR_BOOT_MAGIC, ahdr->magic, ANDR_BOOT_MAGIC_SIZE)) {
@@ -197,13 +199,6 @@ static int bootctrl_kernel_signature_verify(int slot)
 		return -1;
 	}
 }
-
-/*
-static int bootctrl_boot_partition_verify(int slot)
-{
-	return 0;
-}
-*/
 
 static int bootctrl_metadata_verify(void)
 {
@@ -232,38 +227,39 @@ static int bootctrl_metadata_setdefault(void)
 
 unsigned long bootctrl_get_boot_addr(int slot)
 {
-        block_dev_desc_t *dev;
-        disk_partition_t info;
-        unsigned long boot_a_image_addr, boot_b_image_addr;
+	block_dev_desc_t *dev;
+	disk_partition_t info;
+	unsigned long boot_a_image_addr, boot_b_image_addr;
 
-        dev = get_dev("mmc", CONFIG_FASTBOOT_FLASH_MMC_DEV);
-        if(!dev){
-                printf("Failed to get mmc device!\n");
-                return 0;
-        }
- 
-        if(get_partition_info_efi_by_name(dev, "boot_a", &info)){
-                printf("Failed to get partition(boot_a) info!\n");
-                return -1;
-        }
-        boot_a_image_addr = info.start * dev->blksz;
+	dev = get_dev("mmc", CONFIG_FASTBOOT_FLASH_MMC_DEV);
+	if (!dev) {
+		printf("Failed to get mmc device!\n");
+		return 0;
+	}
 
-        if(get_partition_info_efi_by_name(dev, "boot_b", &info)){
-               printf("Failed to get partition(boot_b) info!\n");
-               return -1;
-        }
-        boot_b_image_addr = info.start * dev->blksz;
+	if (get_partition_info_efi_by_name(dev, "boot_a", &info)) {
+		printf("Failed to get partition(boot_a) info!\n");
+		return -1;
+	}
+	boot_a_image_addr = info.start * dev->blksz;
 
-        if (slot == 1)
-                return boot_b_image_addr;
-        else
-                return boot_a_image_addr;
+	if (get_partition_info_efi_by_name(dev, "boot_b", &info)) {
+		printf("Failed to get partition(boot_b) info!\n");
+		return -1;
+	}
+	boot_b_image_addr = info.start * dev->blksz;
+
+	if (slot == 1)
+		return boot_b_image_addr;
+	else
+		return boot_a_image_addr;
 }
 
 char* bootctrl_get_boot_slot_suffix(int slot)
 {
 	if(slot > SLOTS_NUM || slot < 0)
 		return "";
+
 	return bootslot_suffix[slot];
 }
 
@@ -271,6 +267,7 @@ char* bootctrl_get_boot_slot_suffix_only(int slot)
 {
 	if(slot > SLOTS_NUM || slot < 0)
 		return "";
+
 	return bootslot_suffix_only[slot];
 }
 
@@ -289,54 +286,55 @@ int bootctrl_get_boot_slots_num(void)
 
 int bootctrl_set_active_slot(char *slot_suffix, char *response)
 {
-	int i,j;
+	int i, j;
 	BrilloBootInfo *pbbi;
 	BrilloSlotInfo *pbsi;
-	
-	strncpy(response, "FAIL\0", 5);
 
-	if(bootctrl_get_metadata() != 0){
+	strcpy(response, "FAIL");
+
+	if (bootctrl_get_metadata() != 0) {
 		strcat(response, "can not get bl data");
 		return -1;
 	}
 
-	for(i= 0; i<SLOTS_NUM; i++){
-		if(strcmp(bootslot_suffix[i], slot_suffix) == 0)
+	for (i = 0; i < SLOTS_NUM; i++) {
+		if (strcmp(bootslot_suffix[i], slot_suffix) == 0)
 			break;
 	}
-	
-	if(i == SLOTS_NUM){
+
+	if (i == SLOTS_NUM) {
 		strcat(response, "invalid arguments");
 		return -1;
 	}
 
-	if(bootctrl_metadata_verify() != 0){
+	if (bootctrl_metadata_verify() != 0) {
 		bootctrl_metadata_setdefault();
 	}
 
-	pbbi = (BrilloBootInfo *)bl_msg[0].slot_suffix;
+	pbbi = (BrilloBootInfo *) bl_msg[0].slot_suffix;
 	pbsi = pbbi->slot_info;
 	pbsi += i;
 
 	pbsi->bootable = 1;
 	pbsi->boot_successful = 0;
-	pbsi->priority  = 15;
+	pbsi->priority = 15;
 	pbsi->tries_remaining = 7;
 
 	pbsi = pbbi->slot_info;
-	for(j= 0; j<SLOTS_NUM; j++){
-		if(j == i)
+	for (j = 0; j < SLOTS_NUM; j++) {
+		if (j == i)
 			continue;
 		pbsi += j;
-		if(pbsi->priority == 15)
+		if (pbsi->priority == 15)
 			pbsi->priority = 14;
 	}
-	
+
 	printf("Set active slot to %d\n", i);
 
 	bootctrl_set_metadata();
 
-	strncpy(response, "OKAY", 4);
+	strcpy(response, "OKAY");
+
 	return 0;
 }
 
@@ -346,15 +344,15 @@ int bootctrl_get_active_slot(void)
 	BrilloBootInfo *pbbi;
 	BrilloSlotInfo *pbsi;
 
-	if(bootctrl_get_metadata() != 0){
+	if (bootctrl_get_metadata() != 0) {
 		return -1;
 	}
 
-	pbbi = (BrilloBootInfo *)bl_msg[0].slot_suffix;
+	pbbi = (BrilloBootInfo *) bl_msg[0].slot_suffix;
 	pbsi = pbbi->slot_info;
-	for(i= 0; i<SLOTS_NUM; i++){
+	for (i = 0; i < SLOTS_NUM; i++) {
 		pbsi += i;
-		if(pbsi->bootable == 1 && pbsi->priority  == 15){
+		if (pbsi->bootable == 1 && pbsi->priority == 15) {
 			return i;
 		}
 	}
@@ -365,7 +363,7 @@ int bootctrl_get_active_slot(void)
 char* bootctrl_get_active_slot_suffix(void)
 {
 	return bootctrl_get_boot_slot_suffix(bootctrl_get_active_slot());
- }
+}
 
 int bootctrl_find_boot_slot()
 {
@@ -373,41 +371,42 @@ int bootctrl_find_boot_slot()
 	BrilloSlotInfo *pbsi;
 
 	int slot = -1;
-	
-	int i,j;
 
-	int mark[SLOTS_NUM] = {1,1};
-	int sorted_index[SLOTS_NUM] = {0};
+	int i, j;
+
+	int mark[SLOTS_NUM] = { 1, 1 };
+	int sorted_index[SLOTS_NUM] = { 0 };
 
 	int hi_pri = 0;
 	int hi_index = 0;
 
-	if(bootctrl_get_metadata() != 0)
+	if (bootctrl_get_metadata() != 0)
 		return slot;
 
-	if(bootctrl_metadata_verify()){
+	if (bootctrl_metadata_verify()) {
 		/* todo: bypass the verify to allow first time boot go through */
-		printf("Likely first time boot, do 'fastboot --set_active=_a' to init misc data\n");
+		printf( "Likely first time boot, do 'fastboot --set_active=_a' to "
+				"init misc data\n");
 		return slot;
 	}
-		
-	pbbi = (BrilloBootInfo *)bl_msg[0].slot_suffix;
+
+	pbbi = (BrilloBootInfo *) bl_msg[0].slot_suffix;
 
 	printf("Slot suffix: ");
-	for(i=0;i<SLOTS_NUM;i++){
+	for (i = 0; i < SLOTS_NUM; i++) {
 		printf("%s,", bootctrl_get_boot_slot_suffix(i));
 	}
 	printf("\n");
-	
+
 	/* sort by priority, save sorted indexes */
-	for(i=0;i<SLOTS_NUM;i++){
+	for (i = 0; i < SLOTS_NUM; i++) {
 		pbsi = pbbi->slot_info;
 		hi_pri = 0;
-		hi_index =0;
-		for(j =0; j<SLOTS_NUM; j++){
-			if(mark[j]){
+		hi_index = 0;
+		for (j = 0; j < SLOTS_NUM; j++) {
+			if (mark[j]) {
 				pbsi += j;
-				if(pbsi->priority >= hi_pri){
+				if (pbsi->priority >= hi_pri) {
 					hi_pri = pbsi->priority;
 					hi_index = j;
 				}
@@ -417,40 +416,47 @@ int bootctrl_find_boot_slot()
 		mark[hi_index] = 0;
 	}
 
-#if 1
-	/* debug of slot info */ 
-	for(i =0; i<SLOTS_NUM; i++){
-        	pbsi = pbbi->slot_info;
-       		pbsi += sorted_index[i];
+#if DEBUG
+	/* debug of slot info */
+	for (i = 0; i < SLOTS_NUM; i++) {
+		pbsi = pbbi->slot_info;
+		pbsi += sorted_index[i];
 		printf("[%d]bootable:%d\n", sorted_index[i], pbsi->bootable);
-		printf("[%d]boot_successful:%d\n", sorted_index[i], pbsi->boot_successful);
+		printf("[%d]boot_successful:%d\n", sorted_index[i],
+				pbsi->boot_successful);
 		printf("[%d]priority:%d\n", sorted_index[i], pbsi->priority);
-		printf("[%d]tries_remaining:%d\n", sorted_index[i], pbsi->tries_remaining);
+		printf("[%d]tries_remaining:%d\n", sorted_index[i],
+				pbsi->tries_remaining);
 	}
 #endif
 
 	/* find bootable slot */
-	for(i =0; i<SLOTS_NUM; i++){
+	for (i = 0; i < SLOTS_NUM; i++) {
 		pbsi = pbbi->slot_info;
 		pbsi += sorted_index[i];
-		if(pbsi->priority){
-			if(pbsi->boot_successful == 0 && pbsi->tries_remaining == 0){
+		if (pbsi->priority) {
+			if (pbsi->boot_successful == 0 && pbsi->tries_remaining == 0) {
 				pbsi->priority = 0;
 				printf("Set slot %d priority to 0\n", sorted_index[i]);
 				continue;
 			}
-			if(pbsi->boot_successful == 0 && pbsi->tries_remaining){
-				if(bootctrl_kernel_signature_verify(sorted_index[i])){
+
+			if (pbsi->boot_successful == 0 && pbsi->tries_remaining) {
+#ifndef CONFIG_MV_BVB
+				if (bootctrl_kernel_signature_verify(sorted_index[i])) {
 					pbsi->priority = 0;
 					printf("Set slot %d priority to 0\n", sorted_index[i]);
 					continue;
 				}
+#endif
 				pbsi->tries_remaining--;
 				slot = sorted_index[i];
-				printf("Decrease slot %d tries_remaining to %d\n", slot, pbsi->tries_remaining);
+				printf("Decrease slot %d tries_remaining to %d\n", slot,
+						pbsi->tries_remaining);
 				break;
 			}
-			if(pbsi->boot_successful){
+
+			if (pbsi->boot_successful) {
 				slot = sorted_index[i];
 				printf("Booting good slot %d\n", slot);
 				break;
@@ -458,18 +464,19 @@ int bootctrl_find_boot_slot()
 		}
 	}
 
-	if(slot>=0){
+	if (slot >= 0) {
 		bootctrl_set_metadata();
 	}
-	
+
 	return slot;
 }
 
 int bootctrl_is_partition_support_slot(char *partition)
 {
 	int i;
-	for(i=0; partition_slot[i][0] != 0; i++){
-		if(strcmp(partition, partition_slot[i]) == 0)
+
+	for (i = 0; partition_slot[i][0] != 0; i++) {
+		if (strcmp(partition, partition_slot[i]) == 0)
 			return 1;
 	}
 	return 0;
